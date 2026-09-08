@@ -1,0 +1,2726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Master Markov Chains from fundamental stochastic intuition to advanced MCMC, Ergodic Theory, and Spectral Analysis through interactive simulations, dynamic visualizations, and rigorous mathematics.">
+  <title>Interactive Markov Chains: From Foundations to Advanced Stochastic Processes</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- KaTeX for crisp mathematical formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="if(typeof renderAllMath==='function')renderAllMath()"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient background glow effects -->
+  <div class="bg-glow orb-1"></div>
+  <div class="bg-glow orb-2"></div>
+  <div class="bg-glow orb-3"></div>
+
+  <!-- Header Navigation -->
+  <header class="top-nav">
+    <div class="nav-brand">
+      <span class="brand-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="5" cy="12" r="3"></circle>
+          <circle cx="19" cy="6" r="3"></circle>
+          <circle cx="19" cy="18" r="3"></circle>
+          <path d="M7.8 10.6l8.4-3.2M7.8 13.4l8.4 3.2M19 9v6"></path>
+        </svg>
+      </span>
+      <div class="brand-text">
+        <span class="brand-title">Markov<span class="gradient-accent">Lab</span></span>
+        <span class="brand-badge">Comprehensive Courseware</span>
+      </div>
+    </div>
+    
+    <div class="nav-controls">
+      <button id="btn-presenter-mode" class="nav-pill-btn presenter-mode-btn" title="Launch Presentation / Slideshow Mode (Shortcut: P or F)">
+        <span style="font-size: 15px;">📽️</span>
+        <span>Slideshow Mode</span>
+        <span class="key-badge">P</span>
+      </button>
+      <a href="#simulator-section" class="nav-pill-btn">
+        <svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <span>Open Sandbox</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="app-layout">
+    <!-- Sticky Sidebar Navigation / Syllabus -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span class="syllabus-title">Syllabus & Modules</span>
+        <span class="syllabus-sub" id="syllabusProgressText">Module 1 of 8 &bull; Foundations</span>
+        <div class="sidebar-progress-track">
+          <div class="sidebar-progress-fill" id="sidebarProgressBar" style="width: 12%;"></div>
+        </div>
+      </div>
+
+      <nav class="syllabus-nav">
+        <a href="#module-1" class="nav-item active" data-mod="1">
+          <span class="mod-num">01</span>
+          <div class="mod-info">
+            <span class="mod-title">Foundations & Markov Property</span>
+            <span class="mod-tag">Definition & Transition Matrix</span>
+          </div>
+        </a>
+
+        <a href="#module-2" class="nav-item" data-mod="2">
+          <span class="mod-num">02</span>
+          <div class="mod-info">
+            <span class="mod-title">Multi-Step Dynamics & Pⁿ</span>
+            <span class="mod-tag">Chapman-Kolmogorov Equations</span>
+          </div>
+        </a>
+
+        <a href="#module-3" class="nav-item" data-mod="3">
+          <span class="mod-num">03</span>
+          <div class="mod-info">
+            <span class="mod-title">Classification of States</span>
+            <span class="mod-tag">Recurrence, Periodicity, Classes</span>
+          </div>
+        </a>
+
+        <a href="#module-4" class="nav-item" data-mod="4">
+          <span class="mod-num">04</span>
+          <div class="mod-info">
+            <span class="mod-title">Stationary Distributions & Ergodicity</span>
+            <span class="mod-tag">Perron-Frobenius & Mixing Time</span>
+          </div>
+        </a>
+
+        <a href="#module-5" class="nav-item" data-mod="5">
+          <span class="mod-num">05</span>
+          <div class="mod-info">
+            <span class="mod-title">Absorbing Chains & Hitting Times</span>
+            <span class="mod-tag">Fundamental Matrix N = (I-Q)⁻¹</span>
+          </div>
+        </a>
+
+        <a href="#module-6" class="nav-item" data-mod="6">
+          <span class="mod-num">06</span>
+          <div class="mod-info">
+            <span class="mod-title">Reversibility & Detailed Balance</span>
+            <span class="mod-tag">Kolmogorov Criterion & Graphs</span>
+          </div>
+        </a>
+
+        <a href="#module-7" class="nav-item" data-mod="7">
+          <span class="mod-num">07</span>
+          <div class="mod-info">
+            <span class="mod-title">MCMC & Metropolis-Hastings</span>
+            <span class="mod-tag">Sampling Intractable Posteriors</span>
+          </div>
+        </a>
+
+        <a href="#module-8" class="nav-item" data-mod="8">
+          <span class="mod-num">08</span>
+          <div class="mod-info">
+            <span class="mod-title">Applications & Advanced Frontiers</span>
+            <span class="mod-tag">PageRank, Text Gen & HMMs</span>
+          </div>
+        </a>
+
+        <a href="#module-9" class="nav-item" data-mod="9">
+          <span class="mod-num">09</span>
+          <div class="mod-info">
+            <span class="mod-title">Continuous-Time Markov Chains</span>
+            <span class="mod-tag">Generators Q, ODEs & Queues</span>
+          </div>
+        </a>
+
+        <a href="#module-10" class="nav-item" data-mod="10">
+          <span class="mod-num">10</span>
+          <div class="mod-info">
+            <span class="mod-title">Explosive CTMC & Feller Criteria</span>
+            <span class="mod-tag">Lifetime ζ, Defects & Reuter System</span>
+          </div>
+        </a>
+
+        <a href="#module-quiz" class="nav-item" data-mod="quiz">
+          <span class="mod-num">🎯</span>
+          <div class="mod-info">
+            <span class="mod-title">Interactive Knowledge Check</span>
+            <span class="mod-tag">Test Your Mastery</span>
+          </div>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="content-container">
+
+      <!-- Hero Header -->
+      <section class="hero-banner">
+        <div class="hero-badge">
+          <span class="pulse-indicator"></span>
+          <span>Interactive Stochastic Processes Courseware</span>
+        </div>
+        <h1 class="hero-title">
+          Mastering <span class="gradient-text">Markov Chains</span>
+        </h1>
+        <p class="hero-desc">
+          An end-to-end mathematical and computational treatise. Journey from the memoryless property and stochastic matrices all the way to <strong>Spectral Mixing</strong>, <strong>Markov Chain Monte Carlo (MCMC)</strong>, and <strong>Continuous-Time Generators</strong>.
+        </p>
+
+        <div class="hero-stats-grid">
+          <div class="hero-stat-card">
+            <span class="stat-value">9 Modules</span>
+            <span class="stat-label">From Basics to MCMC & Continuous-Time</span>
+          </div>
+          <div class="hero-stat-card">
+            <span class="stat-value">6 Live Simulators</span>
+            <span class="stat-label">Graph Sandbox, MCMC, PageRank, CTMC</span>
+          </div>
+          <div class="hero-stat-card">
+            <span class="stat-value">Rigorous Proofs</span>
+            <span class="stat-label">Formal KaTeX notation & Linear Algebra</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           MODULE 1: FOUNDATIONS & THE MARKOV PROPERTY
+           ========================================================= -->
+      <section class="module-card" id="module-1">
+        <div class="module-header">
+          <span class="module-chip">Module 01</span>
+          <h2 class="module-heading">Foundations & The Markov Property</h2>
+          <p class="module-sub">Memorylessness, State Spaces, and Stochastic Matrices</p>
+        </div>
+
+        <div class="module-body">
+          <p class="paragraph">
+            A <strong>discrete-time stochastic process</strong> is a sequence of random variables $\{X_n : n \in \mathbb{N}_0\}$ taking values in a countable set $\mathcal{S}$, known as the <em>State Space</em>.
+          </p>
+
+          <div class="math-callout definition-box">
+            <div class="box-title">Definition: The Markov Property (Memorylessness)</div>
+            <p>A stochastic process $\{X_n\}$ satisfies the <strong>Markov Property</strong> if the conditional probability distribution of future states depends <em>only</em> on the present state, and not on the sequence of events that preceded it:</p>
+            <div class="katex-display">
+              $$P(X_{n+1} = j \mid X_n = i, X_{n-1} = i_{n-1}, \dots, X_0 = i_0) = P(X_{n+1} = j \mid X_n = i)$$
+            </div>
+            <p class="box-footer">for all time steps $n \ge 0$ and all states $i, j, i_0, \dots, i_{n-1} \in \mathcal{S}$.</p>
+          </div>
+
+          <h3 class="section-subhead">Transition Probabilities & Stochastic Matrices</h3>
+          <p class="paragraph">
+            When the transition probabilities are independent of the time index $n$, the chain is called <strong>time-homogeneous</strong>. We denote the one-step transition probability from state $i$ to state $j$ as:
+          </p>
+          <div class="katex-display">
+            $$P_{ij} = P(X_{n+1} = j \mid X_n = i)$$
+          </div>
+          <p class="paragraph">
+            All transitions are arranged in a square <strong>Transition Matrix</strong> $P = [P_{ij}] \in \mathbb{R}^{|\mathcal{S}| \times |\mathcal{S}|}$. Because probabilities are non-negative and the process must move to <em>some</em> state, $P$ is a <strong>row-stochastic matrix</strong>:
+          </p>
+
+          <div class="math-callout property-box">
+            <div class="box-title">Fundamental Properties of Stochastic Matrix $P$</div>
+            <ul class="prop-list">
+              <li><strong>Non-negativity:</strong> $P_{ij} \ge 0 \quad \forall i, j \in \mathcal{S}$</li>
+              <li><strong>Row Sum to Unity:</strong> $\sum_{j \in \mathcal{S}} P_{ij} = 1 \quad \forall i \in \mathcal{S} \iff P \mathbf{1} = \mathbf{1}$ where $\mathbf{1} = [1, 1, \dots, 1]^T$.</li>
+              <li><strong>Eigenvalue Bound:</strong> Every stochastic matrix has $\lambda_1 = 1$ as its maximum eigenvalue (by the Gershgorin Circle Theorem).</li>
+            </ul>
+          </div>
+
+          <!-- Interactive Simulator Hook -->
+          <div class="interactive-container" id="simulator-section">
+            <div class="interactive-header">
+              <div class="sim-badge">Interactive Simulation 01</div>
+              <h4 class="sim-title">Live State Diagram & Monte Carlo Particle Walker</h4>
+              <p class="sim-desc">Click & drag nodes, adjust transition probabilities, and step the random walker or run batch trajectories.</p>
+            </div>
+
+            <div class="sim-preset-bar">
+              <span class="preset-label">Presets:</span>
+              <button class="btn-preset active" data-preset="weather">🌤️ 3-State Weather</button>
+              <button class="btn-preset" data-preset="pagerank4">🌐 4-Node Web Graph</button>
+              <button class="btn-preset" data-preset="absorbing">🎯 Absorbing (Gambler)</button>
+              <button class="btn-preset" data-preset="periodic">🔄 Periodic Clock</button>
+            </div>
+
+            <div class="sim-grid">
+              <!-- Canvas Graph -->
+              <div class="canvas-wrapper">
+                <canvas id="graphCanvas" width="600" height="380"></canvas>
+                <div class="canvas-overlay-stats">
+                  <span>Current State: <strong id="simCurrentState" class="state-highlight">State 0</strong></span>
+                  <span>Steps (n): <strong id="simStepCount">0</strong></span>
+                </div>
+              </div>
+
+              <!-- Controls & Matrix View -->
+              <div class="sim-side-panel">
+                <!-- Initial Distribution Vector Section -->
+                <div class="init-dist-section">
+                  <div class="panel-header-row">
+                    <h5 class="panel-heading">Initial Distribution $\mu^{(0)} = P(X_0)$</h5>
+                    <button class="btn-micro" id="normalizeMuBtn" title="Normalize vector to sum to 1">Normalize</button>
+                  </div>
+                  <p class="panel-caption">Define starting probabilities $P(X_0 = i)$. Walker samples $X_0 \sim \mu^{(0)}$ on reset.</p>
+                  <div class="init-dist-editor" id="initDistEditor">
+                    <!-- Dynamically populated -->
+                  </div>
+                  <div class="dist-presets-row">
+                    <button class="btn-chip-sm active" data-dist="s0">100% S₀</button>
+                    <button class="btn-chip-sm" data-dist="uniform">Uniform (1/k)</button>
+                    <button class="btn-chip-sm" data-dist="random">Random Prior</button>
+                  </div>
+                </div>
+
+                <div class="matrix-section">
+                  <h5 class="panel-heading">Transition Matrix $P = [P_{ij}]$</h5>
+                  <div class="matrix-editor" id="matrixEditor">
+                    <!-- Dynamically populated -->
+                  </div>
+                </div>
+
+                <div class="sim-actions">
+                  <button class="btn-sim primary" id="simStepBtn">
+                    <svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-7.85-1.42 1.42 5.43 5.43H5v2z"/></svg>
+                    <span>Single Step</span>
+                  </button>
+                  <button class="btn-sim secondary" id="simAutoBtn">
+                    <svg class="icon-sm" id="simAutoIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                    <span id="simAutoText">Auto Run</span>
+                  </button>
+                  <button class="btn-sim outline" id="simResetBtn">Reset Walker</button>
+                </div>
+
+                <div class="speed-slider-row">
+                  <label for="simSpeed">Speed:</label>
+                  <input type="range" id="simSpeed" min="50" max="1000" value="400" step="50">
+                  <span id="speedValue">400ms</span>
+                </div>
+
+                <div class="empirical-stats">
+                  <h6 class="stats-subhead">Empirical Visited Frequency vs Theoretical $\pi$:</h6>
+                  <div class="freq-bars" id="freqBars">
+                    <!-- Dynamically populated -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           MODULE 2: MULTI-STEP DYNAMICS & CHAPMAN-KOLMOGOROV
+           ========================================================= -->
+      <section class="module-card" id="module-2">
+        <div class="module-header">
+          <span class="module-chip">Module 02</span>
+          <h2 class="module-heading">Multi-Step Dynamics & The Chapman-Kolmogorov Equations</h2>
+          <p class="module-sub">Matrix Powers $P^n$ and Probability Distribution Evolution</p>
+        </div>
+
+        <div class="module-body">
+          <p class="paragraph">
+            How do we compute the probability of transitioning from state $i$ to state $j$ in exactly $n$ steps? We define $P_{ij}^{(n)} = P(X_{m+n} = j \mid X_m = i)$.
+          </p>
+
+          <div class="math-callout theorem-box">
+            <div class="box-title">Theorem: Chapman-Kolmogorov Equations</div>
+            <p>For any intermediate time step $k$ with $0 \le k \le n$, the $n$-step transition probability satisfies:</p>
+            <div class="katex-display">
+              $$P_{ij}^{(n)} = \sum_{r \in \mathcal{S}} P_{ir}^{(k)} P_{rj}^{(n-k)}$$
+            </div>
+            <p class="box-footer">In matrix notation, this corresponds precisely to matrix multiplication: $P^{(n)} = P^k \cdot P^{n-k} = P^n$.</p>
+          </div>
+
+          <h3 class="section-subhead">Distribution Vector Evolution</h3>
+          <p class="paragraph">
+            Let $\mu^{(0)} = [\mu_0^{(0)}, \mu_1^{(0)}, \dots]$ be the row vector representing the <strong>initial probability distribution</strong> at $n = 0$, where $\mu_i^{(0)} = P(X_0 = i)$.
+            By induction and the Law of Total Probability:
+          </p>
+          <div class="katex-display">
+            $$\mu^{(n)} = \mu^{(n-1)} P = \mu^{(0)} P^n$$
+          </div>
+
+          <!-- Interactive Matrix Power Explorer -->
+          <div class="interactive-container" id="matrixPowerSimulator">
+            <div class="interactive-header">
+              <div class="sim-badge">Interactive Tool 02</div>
+              <h4 class="sim-title">Matrix Power $P^n$ & Long-Term Convergence Explorer</h4>
+              <p class="sim-desc">Slide $n$ from 1 to 50 to watch how row vectors of $P^n$ homogenize and converge toward the stationary distribution $\pi$.</p>
+            </div>
+
+            <!-- Module 2 Matrix Presets Bar -->
+            <div class="sim-preset-bar">
+              <span class="preset-label">Matrix Presets:</span>
+              <button class="btn-preset active" data-m2preset="weather">🌤️ 3-State Weather</button>
+              <button class="btn-preset" data-m2preset="landofoz">🏰 Land of Oz (Exact π = [0.4, 0.2, 0.4])</button>
+              <button class="btn-preset" data-m2preset="binary2">⚡ 2-State Binary</button>
+              <button class="btn-preset" data-m2preset="sync">🔄 Sync from Module 1</button>
+            </div>
+
+            <div class="slider-control-card">
+              <div class="slider-row">
+                <span class="slider-label">Step exponent $n$: <strong id="stepNVal">1</strong></span>
+                <input type="range" id="stepNSlider" min="1" max="50" value="1" step="1">
+              </div>
+              <div class="slider-quick-buttons">
+                <button class="btn-chip" data-setn="1">n = 1</button>
+                <button class="btn-chip" data-setn="2">n = 2</button>
+                <button class="btn-chip" data-setn="5">n = 5</button>
+                <button class="btn-chip" data-setn="10">n = 10</button>
+                <button class="btn-chip" data-setn="25">n = 25</button>
+                <button class="btn-chip" data-setn="50">n = 50 (Limit)</button>
+              </div>
+            </div>
+
+            <div class="matrix-power-display-grid">
+              <div class="mat-card">
+                <span class="mat-label">Base Transition Matrix $P$:</span>
+                <div class="matrix-table-view" id="baseMatrixView"></div>
+              </div>
+              <div class="mat-arrow">&rarr;</div>
+              <div class="mat-card highlight">
+                <span class="mat-label">Matrix Power $P^n$ at $n = <span id="matExponentLabel">1</span>$:</span>
+                <div class="matrix-table-view" id="poweredMatrixView"></div>
+              </div>
+            </div>
+
+            <!-- Convergence Target π Callout -->
+            <div class="convergence-target-box" id="convergenceTargetBox">
+              <span class="target-label">Exact Theoretical Stationary Limit Row $\pi = [\pi_0, \dots]$:</span>
+              <span class="target-val" id="targetPiVal">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           MODULE 3: CLASSIFICATION OF STATES
+           ========================================================= -->
+      <section class="module-card" id="module-3">
+        <div class="module-header">
+          <span class="module-chip">Module 03</span>
+          <h2 class="module-heading">Structural Classification of States</h2>
+          <p class="module-sub">Communicating Classes, Irreducibility, Recurrence, and Periodicity</p>
+        </div>
+
+        <div class="module-body">
+          <p class="paragraph">
+            The long-term asymptotic behavior of a Markov chain is dictated by the topological structure of its transition graph.
+          </p>
+
+          <div class="concept-cards-grid">
+            <div class="concept-card">
+              <div class="concept-icon">🔗</div>
+              <h4 class="concept-title">Accessibility & Communication</h4>
+              <p class="concept-desc">
+                State $j$ is <strong>accessible</strong> from $i$ ($i \to j$) if $\exists n \ge 0$ such that $P_{ij}^{(n)} > 0$. If $i \to j$ and $j \to i$, they <strong>communicate</strong> ($i \leftrightarrow j$). Communication is an equivalence relation that partitions $\mathcal{S}$ into disjoint <strong>communicating classes</strong>.
+              </p>
+            </div>
+
+            <div class="concept-card">
+              <div class="concept-icon">🌐</div>
+              <h4 class="concept-title">Irreducibility</h4>
+              <p class="concept-desc">
+                A Markov chain is <strong>irreducible</strong> if all states communicate with each other in a single class (i.e. every state is reachable from every other state). Otherwise, the chain is <em>reducible</em>.
+              </p>
+            </div>
+
+            <div class="concept-card">
+              <div class="concept-icon">🔄</div>
+              <h4 class="concept-title">Recurrence vs. Transience</h4>
+              <p class="concept-desc">
+                Let $f_i = P(\text{ever return to } i \mid X_0 = i)$. State $i$ is <strong>recurrent</strong> if $f_i = 1$ (returns infinitely often with probability 1). State $i$ is <strong>transient</strong> if $f_i < 1$ ($\mathbb{E}[\text{visits}] = \frac{1}{1 - f_i} < \infty$).
+              </p>
+            </div>
+
+            <div class="concept-card">
+              <div class="concept-icon">⏰</div>
+              <h4 class="concept-title">Periodicity & Aperiodicity</h4>
+              <p class="concept-desc">
+                The <strong>period</strong> $d(i)$ of state $i$ is $d(i) = \gcd \{n \ge 1 : P_{ii}^{(n)} > 0\}$. If $d(i) = 1$, the state is <strong>aperiodic</strong>. If $d(i) > 1$, the chain cycles predictably between subsets of states.
+              </p>
+            </div>
+          </div>
+
+          <div class="math-callout definition-box">
+            <div class="box-title">Definition: Ergodic (Regular) Markov Chains</div>
+            <p>
+              A state is called <strong>ergodic</strong> if it is <em>positive recurrent</em> ($\mathbb{E}[\text{return time}] < \infty$) and <em>aperiodic</em>. A finite Markov chain is ergodic if and only if it is irreducible and aperiodic (equivalently, $\exists k \ge 1$ such that all entries of $P^k > 0$).
+            </p>
+          </div>
+
+          <!-- Worked Examples Section -->
+          <h3 class="section-subhead">Worked Examples: State Classification in Action</h3>
+
+          <div class="module-examples-grid">
+            <!-- Example 3.1 -->
+            <div class="example-box">
+              <div class="example-badge">Example 3.1 &bull; Reducible Chain with Multiple Classes</div>
+              <h4 class="example-title">Partitioning a 4-State Chain into Communicating Classes</h4>
+              <p class="paragraph">Consider a Markov chain with state space $\mathcal{S} = \{0, 1, 2, 3\}$ and transition matrix:</p>
+              <div class="katex-display">
+                $$P = \begin{pmatrix}
+                1 & 0 & 0 & 0 \\
+                0.5 & 0 & 0.5 & 0 \\
+                0 & 0 & 0.4 & 0.6 \\
+                0 & 0 & 0.7 & 0.3
+                \end{pmatrix}$$
+              </div>
+
+              <!-- SVG Diagram for Example 3.1 -->
+              <div class="diagram-container">
+                <span class="diagram-caption">State Transition Diagram & Class Decomposition:</span>
+                <svg class="example-svg" viewBox="0 0 680 180" width="100%" height="180">
+                  <defs>
+                    <marker id="arr-c1" viewBox="0 0 10 10" refX="18" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#ec4899"/>
+                    </marker>
+                    <marker id="arr-trans" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#f59e0b"/>
+                    </marker>
+                    <marker id="arr-c2" viewBox="0 0 10 10" refX="20" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#06b6d4"/>
+                    </marker>
+                  </defs>
+
+                  <!-- Class Grouping Backgrounds -->
+                  <rect x="35" y="25" width="110" height="135" rx="12" fill="rgba(236,72,153,0.06)" stroke="rgba(236,72,153,0.3)" stroke-dasharray="4 4"/>
+                  <text x="90" y="152" fill="#ec4899" font-size="11" font-weight="700" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif">Class C₁ (Absorbing)</text>
+
+                  <rect x="185" y="25" width="110" height="135" rx="12" fill="rgba(245,158,11,0.06)" stroke="rgba(245,158,11,0.3)" stroke-dasharray="4 4"/>
+                  <text x="240" y="152" fill="#f59e0b" font-size="11" font-weight="700" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif">Transient State {1}</text>
+
+                  <rect x="340" y="25" width="305" height="135" rx="12" fill="rgba(6,182,212,0.06)" stroke="rgba(6,182,212,0.3)" stroke-dasharray="4 4"/>
+                  <text x="492" y="152" fill="#06b6d4" font-size="11" font-weight="700" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif">Class C₂ (Recurrent & Communicating: 2 ↔ 3)</text>
+
+                  <!-- Node 0: Self loop (1.0) -->
+                  <path d="M 80,75 C 50,20 130,20 100,75" fill="none" stroke="#ec4899" stroke-width="2"/>
+                  <text x="90" y="32" fill="#ec4899" font-size="11" font-family="'Fira Code', monospace" text-anchor="middle">1.0</text>
+
+                  <!-- Transitions from State 1 -->
+                  <!-- 1 -> 0 (0.5) -->
+                  <path d="M 220,80 L 110,80" fill="none" stroke="#f59e0b" stroke-width="2" marker-end="url(#arr-trans)"/>
+                  <rect x="150" y="68" width="28" height="16" rx="4" fill="#0f1422"/>
+                  <text x="164" y="80" fill="#f59e0b" font-size="10" font-family="'Fira Code', monospace" text-anchor="middle">0.5</text>
+
+                  <!-- 1 -> 2 (0.5) -->
+                  <path d="M 260,80 L 410,80" fill="none" stroke="#f59e0b" stroke-width="2" marker-end="url(#arr-trans)"/>
+                  <rect x="325" y="68" width="28" height="16" rx="4" fill="#0f1422"/>
+                  <text x="339" y="80" fill="#f59e0b" font-size="10" font-family="'Fira Code', monospace" text-anchor="middle">0.5</text>
+
+                  <!-- Transitions between 2 and 3 -->
+                  <!-- 2 -> 3 (0.6) -->
+                  <path d="M 445,70 Q 492,42 540,70" fill="none" stroke="#06b6d4" stroke-width="2" marker-end="url(#arr-c2)"/>
+                  <rect x="478" y="44" width="28" height="16" rx="4" fill="#0f1422"/>
+                  <text x="492" y="56" fill="#06b6d4" font-size="10" font-family="'Fira Code', monospace" text-anchor="middle">0.6</text>
+
+                  <!-- 3 -> 2 (0.7) -->
+                  <path d="M 540,90 Q 492,118 445,90" fill="none" stroke="#06b6d4" stroke-width="2" marker-end="url(#arr-c2)"/>
+                  <rect x="478" y="100" width="28" height="16" rx="4" fill="#0f1422"/>
+                  <text x="492" y="112" fill="#06b6d4" font-size="10" font-family="'Fira Code', monospace" text-anchor="middle">0.7</text>
+
+                  <!-- 2 -> 2 self loop (0.4) -->
+                  <path d="M 415,75 C 385,25 465,25 435,75" fill="none" stroke="#06b6d4" stroke-width="2"/>
+                  <text x="425" y="32" fill="#06b6d4" font-size="10" font-family="'Fira Code', monospace" text-anchor="middle">0.4</text>
+
+                  <!-- 3 -> 3 self loop (0.3) -->
+                  <path d="M 550,75 C 520,25 600,25 570,75" fill="none" stroke="#06b6d4" stroke-width="2"/>
+                  <text x="560" y="32" fill="#06b6d4" font-size="10" font-family="'Fira Code', monospace" text-anchor="middle">0.3</text>
+
+                  <!-- Nodes (Circles) -->
+                  <!-- Node 0 -->
+                  <circle cx="90" cy="80" r="18" fill="#182238" stroke="#ec4899" stroke-width="3"/>
+                  <text x="90" y="84" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="'Outfit', sans-serif">S₀</text>
+
+                  <!-- Node 1 -->
+                  <circle cx="240" cy="80" r="18" fill="#182238" stroke="#f59e0b" stroke-width="3"/>
+                  <text x="240" y="84" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="'Outfit', sans-serif">S₁</text>
+
+                  <!-- Node 2 -->
+                  <circle cx="425" cy="80" r="18" fill="#182238" stroke="#06b6d4" stroke-width="3"/>
+                  <text x="425" y="84" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="'Outfit', sans-serif">S₂</text>
+
+                  <!-- Node 3 -->
+                  <circle cx="560" cy="80" r="18" fill="#182238" stroke="#06b6d4" stroke-width="3"/>
+                  <text x="560" y="84" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="'Outfit', sans-serif">S₃</text>
+                </svg>
+              </div>
+
+              <div class="example-solution">
+                <span class="solution-label">Mathematical Analysis:</span>
+                <ul class="prop-list">
+                  <li><strong>Class $C_1 = \{0\}$:</strong> Absorbing state ($P_{00} = 1$). It is closed, <em>recurrent</em>, and <em>aperiodic</em>.</li>
+                  <li><strong>Class $C_2 = \{2, 3\}$:</strong> States $2$ and $3$ communicate ($2 \leftrightarrow 3$ since $P_{23} = 0.6 > 0$ and $P_{32} = 0.7 > 0$). No transitions leave $C_2$, so $C_2$ is a closed, <em>recurrent</em>, and <em>aperiodic</em> class.</li>
+                  <li><strong>State $\{1\}$:</strong> Transient ($1 \to 0$ and $1 \to 2$, but once left, the chain can never return to $1$). Hence return probability $f_1 < 1$.</li>
+                  <li><strong>Conclusion:</strong> The chain is <strong>reducible</strong> because it contains two distinct closed recurrent classes and one transient state.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Example 3.2 -->
+            <div class="example-box">
+              <div class="example-badge">Example 3.2 &bull; Periodicity Calculation</div>
+              <h4 class="example-title">Detecting Cyclic Periodicity ($d = 2$ and $d = 3$)</h4>
+              <p class="paragraph">Consider a 2-state alternating chain (Bipartite walk) with $P = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$ and a 3-state directed ring with $P = \begin{pmatrix} 0 & 1 & 0 \\ 0 & 0 & 1 \\ 1 & 0 & 0 \end{pmatrix}$.</p>
+
+              <!-- SVG Diagrams for Example 3.2 -->
+              <div class="diagram-container">
+                <span class="diagram-caption">Periodic State Transition Graphs:</span>
+                <div class="periodic-svg-grid">
+                  <!-- Subgraph A: 2-State (d=2) -->
+                  <div class="svg-sub-card">
+                    <span class="sub-card-label">Graph A: 2-State Alternating (Period $d = 2$)</span>
+                    <svg viewBox="0 0 280 120" width="100%" height="120">
+                      <defs>
+                        <marker id="arr-p2" viewBox="0 0 10 10" refX="20" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                          <path d="M 0 1 L 10 5 L 0 9 z" fill="#818cf8"/>
+                        </marker>
+                      </defs>
+                      <!-- 0 -> 1 -->
+                      <path d="M 75,50 Q 140,20 200,50" fill="none" stroke="#818cf8" stroke-width="2.5" marker-end="url(#arr-p2)"/>
+                      <rect x="126" y="22" width="28" height="16" rx="4" fill="#0f1422"/>
+                      <text x="140" y="34" fill="#818cf8" font-size="10" font-family="'Fira Code', monospace" text-anchor="middle">1.0</text>
+
+                      <!-- 1 -> 0 -->
+                      <path d="M 200,70 Q 140,100 75,70" fill="none" stroke="#818cf8" stroke-width="2.5" marker-end="url(#arr-p2)"/>
+                      <rect x="126" y="80" width="28" height="16" rx="4" fill="#0f1422"/>
+                      <text x="140" y="92" fill="#818cf8" font-size="10" font-family="'Fira Code', monospace" text-anchor="middle">1.0</text>
+
+                      <!-- Nodes -->
+                      <circle cx="60" cy="60" r="18" fill="#182238" stroke="#818cf8" stroke-width="3"/>
+                      <text x="60" y="64" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="'Outfit', sans-serif">S₀</text>
+
+                      <circle cx="220" cy="60" r="18" fill="#182238" stroke="#818cf8" stroke-width="3"/>
+                      <text x="220" y="64" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="'Outfit', sans-serif">S₁</text>
+                    </svg>
+                  </div>
+
+                  <!-- Subgraph B: 3-State Ring (d=3) -->
+                  <div class="svg-sub-card">
+                    <span class="sub-card-label">Graph B: 3-State Directed Ring (Period $d = 3$)</span>
+                    <svg viewBox="0 0 280 120" width="100%" height="120">
+                      <defs>
+                        <marker id="arr-p3" viewBox="0 0 10 10" refX="20" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                          <path d="M 0 1 L 10 5 L 0 9 z" fill="#a855f7"/>
+                        </marker>
+                      </defs>
+                      <!-- 0 -> 1 -->
+                      <path d="M 145,28 L 215,82" fill="none" stroke="#a855f7" stroke-width="2.5" marker-end="url(#arr-p3)"/>
+                      <text x="190" y="50" fill="#a855f7" font-size="10" font-family="'Fira Code', monospace">1.0</text>
+
+                      <!-- 1 -> 2 -->
+                      <path d="M 205,92 L 75,92" fill="none" stroke="#a855f7" stroke-width="2.5" marker-end="url(#arr-p3)"/>
+                      <text x="140" y="108" fill="#a855f7" font-size="10" font-family="'Fira Code', monospace" text-anchor="middle">1.0</text>
+
+                      <!-- 2 -> 0 -->
+                      <path d="M 65,82 L 130,28" fill="none" stroke="#a855f7" stroke-width="2.5" marker-end="url(#arr-p3)"/>
+                      <text x="85" y="50" fill="#a855f7" font-size="10" font-family="'Fira Code', monospace">1.0</text>
+
+                      <!-- Nodes -->
+                      <circle cx="140" cy="22" r="16" fill="#182238" stroke="#a855f7" stroke-width="3"/>
+                      <text x="140" y="26" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="'Outfit', sans-serif">S₀</text>
+
+                      <circle cx="225" cy="90" r="16" fill="#182238" stroke="#a855f7" stroke-width="3"/>
+                      <text x="225" y="94" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="'Outfit', sans-serif">S₁</text>
+
+                      <circle cx="55" cy="90" r="16" fill="#182238" stroke="#a855f7" stroke-width="3"/>
+                      <text x="55" y="94" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="'Outfit', sans-serif">S₂</text>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <div class="example-solution">
+                <span class="solution-label">Periodicity Analysis:</span>
+                <ul class="prop-list">
+                  <li><strong>For the 2-state chain:</strong> Returns to state $0$ are only possible at even step counts $n \in \{2, 4, 6, \dots\}$. Thus $d(0) = \gcd(2, 4, 6, \dots) = 2$ (Periodic with period 2).</li>
+                  <li><strong>For the 3-state ring:</strong> Returns occur only at multiples of 3 ($n \in \{3, 6, 9, \dots\}$). Thus $d(i) = \gcd(3, 6, 9, \dots) = 3$.</li>
+                  <li><strong>Crucial Consequence:</strong> Both chains are <em>irreducible</em> and <em>recurrent</em>, but <strong>periodic</strong> ($d > 1$). As a result, $\lim_{n \to \infty} P^n$ oscillates and does not converge entrywise, even though an invariant measure $\pi = [1/k, \dots, 1/k]$ satisfies $\pi P = \pi$.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Example 3.3 -->
+            <div class="example-box">
+              <div class="example-badge">Example 3.3 &bull; Infinite State Spaces & Pólya's Theorem</div>
+              <h4 class="example-title">Recurrence vs. Transience of Random Walks on $\mathbb{Z}^d$</h4>
+              <p class="paragraph">Consider a simple symmetric random walk where a particle moves to each of its $2d$ nearest neighbors with probability $\frac{1}{2d}$ on the $d$-dimensional integer lattice $\mathbb{Z}^d$.</p>
+
+              <!-- SVG Diagram for Example 3.3 -->
+              <div class="diagram-container">
+                <span class="diagram-caption">1D Infinite Lattice Random Walk ($\mathbb{Z}^1$):</span>
+                <svg class="example-svg" viewBox="0 0 680 130" width="100%" height="130">
+                  <defs>
+                    <marker id="arr-poly-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#10b981"/>
+                    </marker>
+                    <marker id="arr-poly-l" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#10b981"/>
+                    </marker>
+                  </defs>
+
+                  <!-- Left infinite dots -->
+                  <text x="50" y="58" fill="#64748b" font-size="20" font-weight="700" text-anchor="middle">&bull;&bull;&bull;</text>
+
+                  <!-- Connections between nodes -->
+                  <!-- -2 to -1 (Right) and -1 to -2 (Left) -->
+                  <path d="M 125,48 Q 170,24 210,48" fill="none" stroke="#10b981" stroke-width="1.8" marker-end="url(#arr-poly-r)"/>
+                  <text x="168" y="22" fill="#10b981" font-size="9.5" font-family="'Fira Code', monospace" text-anchor="middle">1/2</text>
+                  <path d="M 210,60 Q 170,84 125,60" fill="none" stroke="#10b981" stroke-width="1.8" marker-end="url(#arr-poly-l)"/>
+                  <text x="168" y="88" fill="#10b981" font-size="9.5" font-family="'Fira Code', monospace" text-anchor="middle">1/2</text>
+
+                  <!-- -1 to 0 (Right) and 0 to -1 (Left) -->
+                  <path d="M 240,48 Q 285,24 325,48" fill="none" stroke="#10b981" stroke-width="1.8" marker-end="url(#arr-poly-r)"/>
+                  <text x="283" y="22" fill="#10b981" font-size="9.5" font-family="'Fira Code', monospace" text-anchor="middle">1/2</text>
+                  <path d="M 325,60 Q 285,84 240,60" fill="none" stroke="#10b981" stroke-width="1.8" marker-end="url(#arr-poly-l)"/>
+                  <text x="283" y="88" fill="#10b981" font-size="9.5" font-family="'Fira Code', monospace" text-anchor="middle">1/2</text>
+
+                  <!-- 0 to +1 (Right) and +1 to 0 (Left) -->
+                  <path d="M 360,48 Q 400,24 445,48" fill="none" stroke="#10b981" stroke-width="1.8" marker-end="url(#arr-poly-r)"/>
+                  <text x="402" y="22" fill="#10b981" font-size="9.5" font-family="'Fira Code', monospace" text-anchor="middle">1/2</text>
+                  <path d="M 445,60 Q 400,84 360,60" fill="none" stroke="#10b981" stroke-width="1.8" marker-end="url(#arr-poly-l)"/>
+                  <text x="402" y="88" fill="#10b981" font-size="9.5" font-family="'Fira Code', monospace" text-anchor="middle">1/2</text>
+
+                  <!-- +1 to +2 (Right) and +2 to +1 (Left) -->
+                  <path d="M 475,48 Q 518,24 560,48" fill="none" stroke="#10b981" stroke-width="1.8" marker-end="url(#arr-poly-r)"/>
+                  <text x="518" y="22" fill="#10b981" font-size="9.5" font-family="'Fira Code', monospace" text-anchor="middle">1/2</text>
+                  <path d="M 560,60 Q 518,84 475,60" fill="none" stroke="#10b981" stroke-width="1.8" marker-end="url(#arr-poly-l)"/>
+                  <text x="518" y="88" fill="#10b981" font-size="9.5" font-family="'Fira Code', monospace" text-anchor="middle">1/2</text>
+
+                  <!-- Right infinite dots -->
+                  <text x="635" y="58" fill="#64748b" font-size="20" font-weight="700" text-anchor="middle">&bull;&bull;&bull;</text>
+
+                  <!-- Nodes -->
+                  <circle cx="108" cy="54" r="16" fill="#182238" stroke="#64748b" stroke-width="2"/>
+                  <text x="108" y="58" fill="#fff" font-size="11" font-weight="600" text-anchor="middle" font-family="'Fira Code', monospace">-2</text>
+
+                  <circle cx="225" cy="54" r="16" fill="#182238" stroke="#64748b" stroke-width="2"/>
+                  <text x="225" y="58" fill="#fff" font-size="11" font-weight="600" text-anchor="middle" font-family="'Fira Code', monospace">-1</text>
+
+                  <!-- Origin (Highlighted in Cyan) -->
+                  <circle cx="342" cy="54" r="20" fill="rgba(6,182,212,0.2)" stroke="#06b6d4" stroke-width="3"/>
+                  <text x="342" y="58" fill="#06b6d4" font-size="13" font-weight="800" text-anchor="middle" font-family="'Fira Code', monospace">0</text>
+                  <text x="342" y="112" fill="#06b6d4" font-size="10.5" font-weight="700" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif">Origin (Null Recurrent)</text>
+
+                  <circle cx="460" cy="54" r="16" fill="#182238" stroke="#64748b" stroke-width="2"/>
+                  <text x="460" y="58" fill="#fff" font-size="11" font-weight="600" text-anchor="middle" font-family="'Fira Code', monospace">+1</text>
+
+                  <circle cx="575" cy="54" r="16" fill="#182238" stroke="#64748b" stroke-width="2"/>
+                  <text x="575" y="58" fill="#fff" font-size="11" font-weight="600" text-anchor="middle" font-family="'Fira Code', monospace">+2</text>
+                </svg>
+              </div>
+
+              <div class="example-solution">
+                <span class="solution-label">Pólya's Theorem (1921):</span>
+                <ul class="prop-list">
+                  <li><strong>1D and 2D Lattices ($\mathbb{Z}^1, \mathbb{Z}^2$):</strong> The origin is <strong>null recurrent</strong> ($f_0 = 1$). The walker returns to the origin infinitely often with probability 1, though the expected return time $\mathbb{E}[T_0] = \infty$.</li>
+                  <li><strong>3D Lattice and Higher ($\mathbb{Z}^d, d \ge 3$):</strong> The random walk is <strong>transient</strong> ($f_0 \approx 0.3405 < 1$). There is a $\approx 65.95\%$ probability that the walker escapes to infinity and never returns!</li>
+                  <li><em>"A drunk man will eventually find his way home, but a drunk bird may get lost forever."</em> — Shizuo Kakutani</li>
+                </ul>
+              </div>
+
+              <!-- 3D Lattice Simulator Container -->
+              <div class="interactive-container" id="sim3dLatticeSection">
+                <div class="interactive-header">
+                  <div class="sim-badge">Interactive Simulation 3D</div>
+                  <h4 class="sim-title">3D Lattice Random Walk ($\mathbb{Z}^3$) & Pólya's Escape Explorer</h4>
+                  <p class="sim-desc">Click & drag on the 3D canvas to rotate the camera in 3D. Step through space or run Monte Carlo batch walks to observe transience.</p>
+                </div>
+
+                <div class="lattice3d-controls-row">
+                  <div class="lattice3d-btn-group">
+                    <button class="btn-sim primary" id="walk3dStepBtn">
+                      <svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-7.85-1.42 1.42 5.43 5.43H5v2z"/></svg>
+                      <span>Single Step (6 Directions)</span>
+                    </button>
+                    <button class="btn-sim secondary" id="walk3dAutoBtn">
+                      <svg class="icon-sm" id="walk3dAutoIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                      <span id="walk3dAutoText">Auto Walk</span>
+                    </button>
+                    <button class="btn-sim outline" id="walk3dResetBtn">Reset to (0,0,0)</button>
+                    <button class="btn-sim primary" id="walk3dBatchBtn">Run 100 Batch Walks</button>
+                  </div>
+
+                  <div class="speed-slider-row">
+                    <label for="walk3dSpeed">Speed:</label>
+                    <input type="range" id="walk3dSpeed" min="20" max="500" value="120" step="20">
+                    <span id="walk3dSpeedVal">120ms</span>
+                  </div>
+                </div>
+
+                <!-- 3D Canvas with Rotation Hint Overlay -->
+                <div class="canvas3d-wrapper">
+                  <canvas id="lattice3dCanvas" width="700" height="360"></canvas>
+                  <div class="canvas-3d-hint">
+                    <span>🖱️ Click & Drag to Rotate 3D Camera</span>
+                  </div>
+                  <div class="canvas-3d-overlay">
+                    <span>Pos: <strong id="val3dCoords">(0, 0, 0)</strong></span>
+                    <span>Dist $R$: <strong id="val3dDist">0.00</strong></span>
+                    <span>Steps $t$: <strong id="val3dSteps">0</strong></span>
+                    <span>Returns: <strong id="val3dReturns">0</strong></span>
+                    <span>Last Move: <strong id="val3dOverlayLastMove" style="color: var(--accent-amber);">—</strong></span>
+                  </div>
+                </div>
+
+                <!-- Mathematical Telemetry & Batch Stats -->
+                <div class="lattice3d-stats-grid">
+                  <div class="stat3d-card">
+                    <span class="stat3d-label">Pólya's Theoretical Return Probability ($f_0$):</span>
+                    <span class="stat3d-val highlight">$f_0 \approx 34.05\%$</span>
+                    <span class="stat3d-sub">Escape to infinity prob: $\approx 65.95\%$</span>
+                  </div>
+                  <div class="stat3d-card">
+                    <span class="stat3d-label">Empirical Return Rate (Simulated 100 Walks):</span>
+                    <span class="stat3d-val" id="val3dEmpiricalReturn">—</span>
+                    <span class="stat3d-sub" id="val3dBatchStatus">Click 'Run 100 Batch Walks'</span>
+                  </div>
+                  <div class="stat3d-card">
+                    <span class="stat3d-label">Last Step Direction (Prob = 1/6):</span>
+                    <span class="stat3d-val" id="val3dLastMove">— (Ready)</span>
+                    <span class="stat3d-sub">Uniform random on ±X, ±Y, ±Z</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           MODULE 4: STATIONARY DISTRIBUTIONS & ERGODICITY
+           ========================================================= -->
+      <section class="module-card" id="module-4">
+        <div class="module-header">
+          <span class="module-chip">Module 04</span>
+          <h2 class="module-heading">Stationary Distributions & Ergodic Theory</h2>
+          <p class="module-sub">Invariant Measures, Perron-Frobenius, and Spectral Mixing Times</p>
+        </div>
+
+        <div class="module-body">
+          <p class="paragraph">
+            A probability vector $\pi = [\pi_0, \pi_1, \dots, \pi_{k-1}]$ is an <strong>invariant (stationary) distribution</strong> if it remains unchanged under matrix transition:
+          </p>
+
+          <div class="katex-display">
+            $$\pi P = \pi \quad \text{subject to} \quad \sum_{i \in \mathcal{S}} \pi_i = 1, \quad \pi_i \ge 0$$
+          </div>
+
+          <div class="math-callout theorem-box">
+            <div class="box-title">Fundamental Theorem of Markov Chains (Ergodic Theorem)</div>
+            <p>For any finite, irreducible, and aperiodic Markov chain:</p>
+            <ol class="prop-list">
+              <li>There exists a <strong>unique</strong> stationary distribution $\pi > 0$.</li>
+              <li>For any initial distribution $\mu^{(0)}$, the chain converges exponentially to $\pi$:
+                $$\lim_{n \to \infty} P_{ij}^{(n)} = \pi_j \quad \forall i, j \in \mathcal{S} \implies \lim_{n \to \infty} P^n = \begin{bmatrix} \pi \\ \pi \\ \vdots \\ \pi \end{bmatrix}$$
+              </li>
+              <li><strong>Time Average = Space Average:</strong> For any observable function $f: \mathcal{S} \to \mathbb{R}$:
+                $$\lim_{N \to \infty} \frac{1}{N} \sum_{n=1}^N f(X_n) = \sum_{i \in \mathcal{S}} \pi_i f(i) = \mathbb{E}_{\pi}[f(X)] \quad \text{almost surely.}$$
+              </li>
+            </ol>
+          </div>
+
+          <h3 class="section-subhead">Spectral Decomposition & The Spectral Gap</h3>
+          <p class="paragraph">
+            Let the eigenvalues of $P$ be ordered by magnitude: $1 = \lambda_1 > |\lambda_2| \ge |\lambda_3| \ge \dots \ge |\lambda_k|$.
+            The rate of convergence to stationarity is controlled by the <strong>Spectral Gap</strong> $\gamma = 1 - |\lambda_2|$.
+          </p>
+          <div class="katex-display">
+            $$\|P_{i,\cdot}^{(n)} - \pi\|_{TV} \le C \cdot |\lambda_2|^n = C \cdot (1 - \gamma)^n$$
+          </div>
+          <p class="paragraph">
+            The <strong>Mixing Time</strong> $\tau_{\text{mix}}(\epsilon)$, defined as the number of steps required for the total variation distance to drop below $\epsilon$, satisfies:
+          </p>
+          <div class="katex-display">
+            $$\tau_{\text{mix}}(\epsilon) \approx \frac{1}{\gamma} \ln\left(\frac{1}{\epsilon}\right)$$
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           MODULE 5: ABSORBING MARKOV CHAINS & HITTING TIMES
+           ========================================================= -->
+      <section class="module-card" id="module-5">
+        <div class="module-header">
+          <span class="module-chip">Module 05</span>
+          <h2 class="module-heading">Absorbing Chains & The Fundamental Matrix</h2>
+          <p class="module-sub">Hitting Times, Gambler's Ruin, and Absorption Probabilities</p>
+        </div>
+
+        <div class="module-body">
+          <p class="paragraph">
+            A state $i$ is <strong>absorbing</strong> if $P_{ii} = 1$ (once entered, it cannot be left). A Markov chain is absorbing if it has at least one absorbing state, and every transient state can reach an absorbing state.
+          </p>
+
+          <p class="paragraph">
+            By reordering states into transient states $\mathcal{T}$ and absorbing states $\mathcal{A}$, the transition matrix $P$ takes the <strong>Canonical Form</strong>:
+          </p>
+          <div class="katex-display">
+            $$P = \begin{pmatrix} Q & R \\ 0 & I \end{pmatrix}$$
+          </div>
+          <p class="paragraph">
+            where $Q \in \mathbb{R}^{t \times t}$ governs transitions between transient states, and $R \in \mathbb{R}^{t \times r}$ governs transitions from transient to absorbing states.
+          </p>
+
+          <div class="math-callout definition-box">
+            <div class="box-title">The Fundamental Matrix $N = (I - Q)^{-1}$</div>
+            <p>The matrix series $\sum_{k=0}^\infty Q^k$ converges because $\lim_{k \to \infty} Q^k = 0$. We define the <strong>Fundamental Matrix</strong>:</p>
+            <div class="katex-display">
+              $$N = (I - Q)^{-1} = I + Q + Q^2 + Q^3 + \dots$$
+            </div>
+            <ul class="prop-list">
+              <li>$N_{ij} = \mathbb{E}[\text{number of times state } j \text{ is visited before absorption} \mid X_0 = i]$.</li>
+              <li><strong>Expected Time to Absorption:</strong> $\mathbf{t} = N \mathbf{1}$, where $t_i = \mathbb{E}[\text{steps until trapped} \mid X_0 = i]$.</li>
+              <li><strong>Absorption Probability Matrix:</strong> $B = N R$, where $B_{ij} = P(\text{absorbed in state } j \mid X_0 = i)$.</li>
+            </ul>
+          </div>
+
+          <!-- Interactive Gambler's Ruin Simulator -->
+          <div class="interactive-container" id="ruinSimulator">
+            <div class="interactive-header">
+              <div class="sim-badge">Interactive Simulation 03</div>
+              <h4 class="sim-title">Gambler's Ruin / 1D Absorbing Random Walk</h4>
+              <p class="sim-desc">Simulate a 1D bounded random walk on states $\{0, 1, \dots, K\}$. State $0$ is Ruin (Broke) and state $K$ is Goal (Fortune).</p>
+            </div>
+
+            <!-- Simulation Mode Tabs -->
+            <div class="sim-mode-tabs">
+              <button class="btn-tab active" data-ruintab="stepwise">🎲 Step-wise Walk Simulation</button>
+              <button class="btn-tab" data-ruintab="batch">📊 Batch Monte Carlo (200 Walks)</button>
+            </div>
+
+            <!-- Shared Parameter Controls Bar -->
+            <div class="ruin-controls-bar">
+              <div class="ruin-input-group">
+                <label>Win Probability $p$:</label>
+                <input type="range" id="ruinProbP" min="0.1" max="0.9" step="0.05" value="0.5">
+                <span id="ruinPVal">0.50 (Fair)</span>
+              </div>
+              <div class="ruin-input-group">
+                <label>Goal Target $K$:</label>
+                <input type="number" id="ruinTargetK" min="3" max="12" value="6">
+              </div>
+              <div class="ruin-input-group">
+                <label>Starting Capital $X_0$:</label>
+                <input type="number" id="ruinStartCapital" min="1" max="11" value="3">
+              </div>
+            </div>
+
+            <!-- 1D Lattice Node Diagram -->
+            <div class="ruin-lattice-view" id="ruinLatticeView">
+              <!-- Lattice Nodes dynamically rendered -->
+            </div>
+
+            <!-- TAB 1: STEP-WISE WALK VIEW -->
+            <div class="ruin-tab-content active" id="ruinTabStepwise">
+              <div class="stepwise-controls-row">
+                <div class="stepwise-btn-group">
+                  <button class="btn-sim primary" id="ruinStepBtn">
+                    <svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-7.85-1.42 1.42 5.43 5.43H5v2z"/></svg>
+                    <span>Single Step (Flip Coin)</span>
+                  </button>
+                  <button class="btn-sim secondary" id="ruinAutoBtn">
+                    <svg class="icon-sm" id="ruinAutoIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                    <span id="ruinAutoText">Auto Walk</span>
+                  </button>
+                  <button class="btn-sim outline" id="ruinResetWalkBtn">Reset Walk</button>
+                </div>
+
+                <div class="speed-slider-row">
+                  <label for="ruinSpeed">Step Speed:</label>
+                  <input type="range" id="ruinSpeed" min="50" max="800" value="350" step="50">
+                  <span id="ruinSpeedVal">350ms</span>
+                </div>
+              </div>
+
+              <!-- Step-wise Status & Event Bar -->
+              <div class="stepwise-status-card">
+                <div class="status-metric">
+                  <span class="metric-label">Current Position:</span>
+                  <strong class="metric-val" id="stepwiseCapitalVal">$3</strong>
+                </div>
+                <div class="status-metric">
+                  <span class="metric-label">Steps Taken ($t$):</span>
+                  <strong class="metric-val" id="stepwiseStepVal">0</strong>
+                </div>
+                <div class="status-metric">
+                  <span class="metric-label">Last Coin Toss:</span>
+                  <span class="coin-badge" id="stepwiseLastCoin">—</span>
+                </div>
+                <div class="status-metric">
+                  <span class="metric-label">Walk Status:</span>
+                  <span class="walk-status-badge in-progress" id="stepwiseStatusBadge">Active Walk</span>
+                </div>
+              </div>
+
+              <!-- Trajectory History Trail -->
+              <div class="trajectory-history-box">
+                <span class="trajectory-label">Trajectory Path ($X_0 \to X_t$):</span>
+                <div class="trajectory-trail" id="stepwiseTrail">
+                  <span class="trail-step active">$3</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 2: BATCH MONTE CARLO VIEW -->
+            <div class="ruin-tab-content" id="ruinTabBatch">
+              <div class="batch-action-bar">
+                <button class="btn-sim primary" id="runRuinSimBtn">
+                  <svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+                  <span>Simulate 200 Fast Walks</span>
+                </button>
+                <span class="batch-info-text">Runs 200 independent trajectories from $X_0$ to absorption.</span>
+              </div>
+
+              <div class="ruin-results-grid">
+                <div class="ruin-card">
+                  <span class="ruin-label">Theoretical Win Probability $B_{i, K}$:</span>
+                  <span class="ruin-value" id="theoryWinProb">0.500</span>
+                </div>
+                <div class="ruin-card">
+                  <span class="ruin-label">Empirical Win Rate (Simulated):</span>
+                  <span class="ruin-value highlight" id="empiricalWinProb">0.000</span>
+                </div>
+                <div class="ruin-card">
+                  <span class="ruin-label">Theoretical Expected Steps $t_i$:</span>
+                  <span class="ruin-value" id="theorySteps">9.00 steps</span>
+                </div>
+                <div class="ruin-card">
+                  <span class="ruin-label">Empirical Avg Steps (Simulated):</span>
+                  <span class="ruin-value highlight" id="empiricalAvgSteps">0.00 steps</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ANALYTICAL MATRICES OUTPUT: N, t, B -->
+            <div class="ruin-matrices-section">
+              <div class="matrices-header-row">
+                <h5 class="matrices-title">📐 Analytical Matrices: Fundamental Matrix $N$, Absorption Times $\mathbf{t}$, & Probabilities $B$</h5>
+                <span class="matrices-note">Highlighted row corresponds to active starting state $X_0$.</span>
+              </div>
+
+              <div class="absorbing-matrices-grid">
+                <!-- Matrix N Card -->
+                <div class="matrix-output-card">
+                  <div class="card-top-info">
+                    <span class="matrix-symbol-badge">Matrix N</span>
+                    <span class="matrix-card-title">Fundamental Matrix $N = (I - Q)^{-1}$</span>
+                  </div>
+                  <p class="matrix-card-desc">$N_{ij} = \mathbb{E}[\text{visits to } j \mid X_0 = i]$</p>
+                  <div class="matrix-table-scroll" id="matrixNContainer">
+                    <!-- Dynamically rendered -->
+                  </div>
+                </div>
+
+                <!-- Matrix B Card -->
+                <div class="matrix-output-card">
+                  <div class="card-top-info">
+                    <span class="matrix-symbol-badge badge-green">Matrix B</span>
+                    <span class="matrix-card-title">Absorption Probabilities $B = N R$</span>
+                  </div>
+                  <p class="matrix-card-desc">$B_{ij} = P(\text{absorbed in } j \mid X_0 = i)$</p>
+                  <div class="matrix-table-scroll" id="matrixBContainer">
+                    <!-- Dynamically rendered -->
+                  </div>
+                </div>
+
+                <!-- Vector t Card -->
+                <div class="matrix-output-card">
+                  <div class="card-top-info">
+                    <span class="matrix-symbol-badge badge-amber">Vector t</span>
+                    <span class="matrix-card-title">Expected Absorption Time $\mathbf{t} = N \mathbf{1}$</span>
+                  </div>
+                  <p class="matrix-card-desc">$t_i = \mathbb{E}[\text{steps to absorption} \mid X_0 = i]$</p>
+                  <div class="matrix-table-scroll" id="matrixTContainer">
+                    <!-- Dynamically rendered -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           MODULE 6: REVERSIBILITY & DETAILED BALANCE
+           ========================================================= -->
+      <section class="module-card" id="module-6">
+        <div class="module-header">
+          <span class="module-chip">Module 06</span>
+          <h2 class="module-heading">Reversibility & Detailed Balance</h2>
+          <p class="module-sub">Time-Reversible Chains, Kolmogorov's Cycle Criterion, and Random Walks on Graphs</p>
+        </div>
+
+        <div class="module-body">
+          <p class="paragraph">
+            A stationary Markov chain is called <strong>time-reversible</strong> if the probabilistic behavior of the process running forward in time is identical to the process running backward in time.
+          </p>
+
+          <div class="math-callout definition-box">
+            <div class="box-title">Definition: Detailed Balance Equations</div>
+            <p>A probability distribution $\pi$ satisfies <strong>detailed balance</strong> with transition matrix $P$ if:</p>
+            <div class="katex-display">
+              $$\pi_i P_{ij} = \pi_j P_{ji} \quad \forall i, j \in \mathcal{S}$$
+            </div>
+            <p class="box-footer">
+              <strong>Key Theorem:</strong> If a probability distribution $\pi$ satisfies detailed balance, then $\pi$ is automatically a <em>stationary distribution</em> ($\pi P = \pi$).
+            </p>
+          </div>
+
+          <h3 class="section-subhead">Random Walks on Undirected Graphs</h3>
+          <p class="paragraph">
+            Let $G = (V, E)$ be a connected, non-bipartite undirected graph with adjacency matrix $A$ and vertex degrees $d_i = \sum_j A_{ij}$.
+            A random walk on $G$ transitions to neighbors with equal probability:
+          </p>
+          <div class="katex-display">
+            $$P_{ij} = \frac{A_{ij}}{d_i}$$
+          </div>
+          <p class="paragraph">
+            Substituting into the detailed balance condition reveals that the stationary distribution is directly proportional to node degree:
+          </p>
+          <div class="katex-display">
+            $$\pi_i = \frac{d_i}{2|E|}$$
+          </div>
+
+          <!-- Worked Example 6.1 -->
+          <div class="module-examples-grid">
+            <div class="example-box">
+              <div class="example-badge">Example 6.1 &bull; Random Walk on an Undirected Network</div>
+              <h4 class="example-title">Detailed Balance & Degree-Proportional Invariant Measure on a 5-Node Graph</h4>
+              <p class="paragraph">
+                Consider an undirected graph $G = (V, E)$ with 5 nodes $V = \{1, 2, 3, 4, 5\}$ and 6 edges $E = \{(1, 2), (1, 3), (2, 3), (3, 4), (3, 5), (4, 5)\}$. Node $3$ acts as the central hub connecting two triangular clusters.
+              </p>
+
+              <!-- SVG Network Diagram -->
+              <div class="diagram-container">
+                <span class="diagram-caption">Undirected Network Graph with Transition Probabilities:</span>
+                <svg class="example-svg" viewBox="0 0 680 200" width="100%" height="200">
+                  <defs>
+                    <marker id="arr-g6" viewBox="0 0 10 10" refX="18" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+                      <path d="M 0 2 L 8 5 L 0 8 z" fill="#818cf8"/>
+                    </marker>
+                  </defs>
+
+                  <!-- Cluster 1 Background -->
+                  <polygon points="120,40 60,160 270,100" fill="rgba(99,102,241,0.04)" stroke="rgba(99,102,241,0.2)" stroke-dasharray="4 4"/>
+                  <text x="130" y="180" fill="#818cf8" font-size="10.5" font-weight="700" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif">Cluster 1 {Node 1, Node 2}</text>
+
+                  <!-- Cluster 2 Background -->
+                  <polygon points="560,40 620,160 410,100" fill="rgba(6,182,212,0.04)" stroke="rgba(6,182,212,0.2)" stroke-dasharray="4 4"/>
+                  <text x="550" y="180" fill="#06b6d4" font-size="10.5" font-weight="700" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif">Cluster 2 {Node 4, Node 5}</text>
+
+                  <!-- Edges with bidirectional labels -->
+                  <!-- Edge (1, 2) -->
+                  <line x1="140" y1="50" x2="90" y2="140" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                  <rect x="100" y="85" width="28" height="15" rx="3" fill="#0f1422"/>
+                  <text x="114" y="96" fill="#cbd5e1" font-size="9" font-family="'Fira Code', monospace" text-anchor="middle">1/2</text>
+
+                  <!-- Edge (1, 3) -->
+                  <line x1="140" y1="50" x2="340" y2="100" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                  <rect x="220" y="65" width="44" height="15" rx="3" fill="#0f1422"/>
+                  <text x="242" y="76" fill="#818cf8" font-size="9" font-family="'Fira Code', monospace" text-anchor="middle">½ ⇄ ¼</text>
+
+                  <!-- Edge (2, 3) -->
+                  <line x1="90" y1="140" x2="340" y2="100" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                  <rect x="200" y="125" width="44" height="15" rx="3" fill="#0f1422"/>
+                  <text x="222" y="136" fill="#818cf8" font-size="9" font-family="'Fira Code', monospace" text-anchor="middle">½ ⇄ ¼</text>
+
+                  <!-- Edge (3, 4) -->
+                  <line x1="340" y1="100" x2="540" y2="50" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                  <rect x="420" y="65" width="44" height="15" rx="3" fill="#0f1422"/>
+                  <text x="442" y="76" fill="#06b6d4" font-size="9" font-family="'Fira Code', monospace" text-anchor="middle">¼ ⇄ ½</text>
+
+                  <!-- Edge (3, 5) -->
+                  <line x1="340" y1="100" x2="590" y2="140" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                  <rect x="440" y="125" width="44" height="15" rx="3" fill="#0f1422"/>
+                  <text x="462" y="136" fill="#06b6d4" font-size="9" font-family="'Fira Code', monospace" text-anchor="middle">¼ ⇄ ½</text>
+
+                  <!-- Edge (4, 5) -->
+                  <line x1="540" y1="50" x2="590" y2="140" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                  <rect x="552" y="85" width="28" height="15" rx="3" fill="#0f1422"/>
+                  <text x="566" y="96" fill="#cbd5e1" font-size="9" font-family="'Fira Code', monospace" text-anchor="middle">1/2</text>
+
+                  <!-- Nodes -->
+                  <!-- Node 1 -->
+                  <circle cx="140" cy="50" r="17" fill="#182238" stroke="#818cf8" stroke-width="2.5"/>
+                  <text x="140" y="54" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="'Outfit', sans-serif">1</text>
+                  <text x="140" y="24" fill="#94a3b8" font-size="9.5" text-anchor="middle" font-family="'Fira Code', monospace">d=2 (π=1/6)</text>
+
+                  <!-- Node 2 -->
+                  <circle cx="90" cy="140" r="17" fill="#182238" stroke="#818cf8" stroke-width="2.5"/>
+                  <text x="90" y="144" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="'Outfit', sans-serif">2</text>
+                  <text x="90" y="172" fill="#94a3b8" font-size="9.5" text-anchor="middle" font-family="'Fira Code', monospace">d=2 (π=1/6)</text>
+
+                  <!-- Central Hub Node 3 (Larger, Glowing Yellow/Amber) -->
+                  <circle cx="340" cy="100" r="24" fill="rgba(245,158,11,0.2)" stroke="#f59e0b" stroke-width="3.5"/>
+                  <text x="340" y="105" fill="#f59e0b" font-size="15" font-weight="800" text-anchor="middle" font-family="'Outfit', sans-serif">3</text>
+                  <text x="340" y="142" fill="#f59e0b" font-size="11" font-weight="700" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif">Hub: d=4 (π = 1/3)</text>
+
+                  <!-- Node 4 -->
+                  <circle cx="540" cy="50" r="17" fill="#182238" stroke="#06b6d4" stroke-width="2.5"/>
+                  <text x="540" y="54" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="'Outfit', sans-serif">4</text>
+                  <text x="540" y="24" fill="#94a3b8" font-size="9.5" text-anchor="middle" font-family="'Fira Code', monospace">d=2 (π=1/6)</text>
+
+                  <!-- Node 5 -->
+                  <circle cx="590" cy="140" r="17" fill="#182238" stroke="#06b6d4" stroke-width="2.5"/>
+                  <text x="590" y="144" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="'Outfit', sans-serif">5</text>
+                  <text x="590" y="172" fill="#94a3b8" font-size="9.5" text-anchor="middle" font-family="'Fira Code', monospace">d=2 (π=1/6)</text>
+                </svg>
+              </div>
+
+              <!-- Mathematical Solution & Detailed Balance Proof -->
+              <div class="example-solution">
+                <span class="solution-label">Step-by-Step Mathematical Analysis:</span>
+                <ul class="prop-list">
+                  <li><strong>Degree Calculation & Edge Sum:</strong>
+                    The vertex degrees are $d_1 = 2, d_2 = 2, d_3 = 4, d_4 = 2, d_5 = 2$.
+                    Total degree sum $2|E| = \sum_{v \in V} d_v = 2 + 2 + 4 + 2 + 2 = 12 \implies |E| = 6$.
+                  </li>
+                  <li><strong>1-Step Transition Probability Matrix $P$:</strong>
+                    $$\begin{aligned}
+                    P = \begin{pmatrix}
+                    0 & 1/2 & 1/2 & 0 & 0 \\
+                    1/2 & 0 & 1/2 & 0 & 0 \\
+                    1/4 & 1/4 & 0 & 1/4 & 1/4 \\
+                    0 & 0 & 1/2 & 0 & 1/2 \\
+                    0 & 0 & 1/2 & 1/2 & 0
+                    \end{pmatrix}
+                    \end{aligned}$$
+                  </li>
+                  <li><strong>Unique Stationary Distribution ($\pi$):</strong>
+                    By the theorem of random walks on undirected graphs:
+                    $$\pi = \left[ \frac{d_1}{2|E|}, \frac{d_2}{2|E|}, \frac{d_3}{2|E|}, \frac{d_4}{2|E|}, \frac{d_5}{2|E|} \right] = \left[ \frac{2}{12}, \frac{2}{12}, \frac{4}{12}, \frac{2}{12}, \frac{2}{12} \right] = \left[ \frac{1}{6}, \frac{1}{6}, \frac{1}{3}, \frac{1}{6}, \frac{1}{6} \right]$$
+                  </li>
+                  <li><strong>Verification of Detailed Balance ($\pi_i P_{ij} = \pi_j P_{ji}$):</strong>
+                    <ul style="margin-top: 6px; padding-left: 18px;">
+                      <li>Between Node 1 and Node 3: $\pi_1 P_{13} = \frac{1}{6} \times \frac{1}{2} = \frac{1}{12}$, and $\pi_3 P_{31} = \frac{1}{3} \times \frac{1}{4} = \frac{1}{12}$. <span style="color: var(--accent-green);">Equal &check;</span></li>
+                      <li>Between Node 3 and Node 4: $\pi_3 P_{34} = \frac{1}{3} \times \frac{1}{4} = \frac{1}{12}$, and $\pi_4 P_{43} = \frac{1}{6} \times \frac{1}{2} = \frac{1}{12}$. <span style="color: var(--accent-green);">Equal &check;</span></li>
+                      <li>Between non-adjacent nodes (e.g. 1 and 4): $\pi_1 P_{14} = 0 = \pi_4 P_{41}$. <span style="color: var(--accent-green);">Equal &check;</span></li>
+                    </ul>
+                  </li>
+                  <li><strong>Expected Return Times (Kac's Lemma $\mathbb{E}[T_i] = 1/\pi_i$):</strong>
+                    $$\mathbb{E}[T_1] = \frac{1}{\pi_1} = 6 \text{ steps}, \quad \mathbb{E}[T_3] = \frac{1}{\pi_3} = 3 \text{ steps}$$
+                    <em>Intuition: The central hub Node $3$ has double the connectivity, so the random walker returns to it twice as frequently!</em>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Interactive Undirected Graph Walk Simulator -->
+              <div class="interactive-container" id="simGraphWalkSection">
+                <div class="interactive-header">
+                  <div class="sim-badge">Interactive Simulation 04</div>
+                  <h4 class="sim-title">Undirected Graph Random Walk & Detailed Balance Live Verifier</h4>
+                  <p class="sim-desc">
+                    Click & drag the graph nodes or let the walker roam. Observe how the empirical visit distribution $\hat{\pi}$ converges precisely to the degree ratio $\frac{d_i}{2|E|}$, and how bidirectional edge transitions balance each other ($\pi_i P_{ij} = \pi_j P_{ji}$).
+                  </p>
+                </div>
+
+                <div class="graphwalk-controls-row">
+                  <div class="graphwalk-btn-group">
+                    <button class="btn-sim primary" id="walkGraphStepBtn">
+                      <svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-7.85-1.42 1.42 5.43 5.43H5v2z"/></svg>
+                      <span>Single Step</span>
+                    </button>
+                    <button class="btn-sim secondary" id="walkGraphAutoBtn">
+                      <svg class="icon-sm" id="walkGraphAutoIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                      <span id="walkGraphAutoText">Auto Walk</span>
+                    </button>
+                    <button class="btn-sim primary" id="walkGraphFastBtn">
+                      <svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></svg>
+                      <span>+1,000 Fast Steps</span>
+                    </button>
+                    <button class="btn-sim outline" id="walkGraphResetBtn">Reset Stats</button>
+                  </div>
+
+                  <div class="speed-slider-row">
+                    <label for="walkGraphSpeed">Speed:</label>
+                    <input type="range" id="walkGraphSpeed" min="20" max="500" value="150" step="20">
+                    <span id="walkGraphSpeedVal">150ms</span>
+                  </div>
+                </div>
+
+                <!-- Canvas + Real-time Convergence Telemetry -->
+                <div class="graphwalk-main-grid">
+                  <div class="canvas-graphwalk-wrapper">
+                    <canvas id="graphWalkCanvas" width="520" height="320"></canvas>
+                    <div class="canvas-drag-hint">🖱️ Nodes are Draggable</div>
+                    <div class="graph-walker-overlay">
+                      <span>Current Node: <strong id="valGraphCurrentNode" style="color: var(--accent-amber);">Node 1</strong></span>
+                      <span>Total Steps $N$: <strong id="valGraphTotalSteps">0</strong></span>
+                    </div>
+                  </div>
+
+                  <!-- Distribution Convergence Table / Visual Bars -->
+                  <div class="graphwalk-distribution-card">
+                    <h5 class="dist-card-title">Empirical ($\hat{\pi}$) vs Theoretical ($\pi_i = \frac{d_i}{12}$)</h5>
+                    <div class="dist-table-wrapper">
+                      <table class="matrix-table-analytical dist-comp-table">
+                        <thead>
+                          <tr>
+                            <th>Node</th>
+                            <th>Degree</th>
+                            <th>Theory $\pi_i$</th>
+                            <th>Empirical $\hat{\pi}_i$</th>
+                            <th>Visits</th>
+                          </tr>
+                        </thead>
+                        <tbody id="graphWalkTableBody">
+                          <!-- Dynamically rendered -->
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <!-- Total Variation Distance & Edge Flux Check -->
+                    <div class="dist-metrics-summary">
+                      <div class="metric-pill">
+                        <span class="m-label">Total Variation Error $\|\hat{\pi} - \pi\|_{TV}$:</span>
+                        <strong class="m-val highlight" id="valGraphTvError">0.0000</strong>
+                      </div>
+                      <div class="metric-pill">
+                        <span class="m-label">Detailed Balance Flux ($1 \to 3$ vs $3 \to 1$):</span>
+                        <strong class="m-val" id="valGraphFlux13">0 vs 0 (Balanced)</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           MODULE 7: MCMC & METROPOLIS-HASTINGS
+           ========================================================= -->
+      <section class="module-card" id="module-7">
+        <div class="module-header">
+          <span class="module-chip">Module 07</span>
+          <h2 class="module-heading">Markov Chain Monte Carlo (MCMC)</h2>
+          <p class="module-sub">Sampling from Intractable High-Dimensional Target Distributions</p>
+        </div>
+
+        <div class="module-body">
+          <p class="paragraph">
+            In Bayesian statistics and statistical physics, we often wish to sample from a target distribution $p(x) = \frac{\tilde{p}(x)}{Z}$, where the normalizing constant (partition function) $Z = \int \tilde{p}(x) dx$ is analytically intractable.
+          </p>
+          <p class="paragraph">
+            <strong>The MCMC Insight:</strong> Instead of computing $Z$, construct an ergodic Markov chain whose unique stationary distribution is exactly $\pi(x) = p(x)$!
+          </p>
+
+          <div class="math-callout algorithm-box">
+            <div class="box-title">Algorithm: Metropolis-Hastings</div>
+            <ol class="algo-steps">
+              <li>Initialize at state $x_0$.</li>
+              <li>At current state $x_t$, propose a candidate $x' \sim q(x' \mid x_t)$ from proposal distribution $q$.</li>
+              <li>Compute the <strong>acceptance probability</strong> $\alpha(x_t, x')$:
+                <div class="katex-display">
+                  $$\alpha(x_t, x') = \min\left(1, \frac{\tilde{p}(x') q(x_t \mid x')}{\tilde{p}(x_t) q(x' \mid x_t)}\right)$$
+                </div>
+                <em>Note: The normalizing constant $Z$ cancels out perfectly!</em>
+              </li>
+              <li>Draw $u \sim \text{Uniform}(0, 1)$.
+                <ul>
+                  <li>If $u \le \alpha(x_t, x')$: <strong>Accept</strong> proposal &rarr; $x_{t+1} = x'$.</li>
+                  <li>Else: <strong>Reject</strong> proposal &rarr; $x_{t+1} = x_t$.</li>
+                </ul>
+              </li>
+            </ol>
+          </div>
+
+          <!-- Interactive MCMC Visualizer -->
+          <div class="interactive-container" id="mcmcSimulatorSection">
+            <div class="interactive-header">
+              <div class="sim-badge">Interactive Simulation 05</div>
+              <h4 class="sim-title">Live Metropolis-Hastings Sampler for Bimodal Gaussian Mixture</h4>
+              <p class="sim-desc">Watch MCMC particles explore energy wells and construct an empirical histogram that converges to the target distribution $\pi(x)$.</p>
+            </div>
+
+            <!-- Mathematical Specification of Proposal & Target -->
+            <div class="mcmc-math-spec-box">
+              <div class="spec-grid">
+                <div class="spec-card">
+                  <span class="spec-label">Target Distribution $\tilde{p}(x)$ (Unnormalized):</span>
+                  <div class="katex-display spec-math">
+                    $$\tilde{p}(x) = 0.4 \cdot \mathcal{N}(-2, 0.7^2) + 0.6 \cdot \mathcal{N}(2, 0.8^2)$$
+                  </div>
+                  <span class="spec-sub">Bimodal energy landscape with two distinct modes at $x = -2$ and $x = +2$.</span>
+                </div>
+
+                <div class="spec-card highlight">
+                  <span class="spec-label">Used Proposal Density $q(x' \mid x_t)$ (Gaussian Random Walk):</span>
+                  <div class="katex-display spec-math">
+                    $$q(x' \mid x_t) = \frac{1}{\sqrt{2\pi \sigma_{\text{prop}}^2}} \exp\left( -\frac{(x' - x_t)^2}{2\sigma_{\text{prop}}^2} \right) \sim \mathcal{N}(x_t, \sigma_{\text{prop}}^2)$$
+                  </div>
+                  <span class="spec-sub">
+                    <strong>Symmetric Proposal:</strong> Because $q(x' \mid x_t) = q(x_t \mid x')$, the proposal ratio $\frac{q(x_t \mid x')}{q(x' \mid x_t)} = 1$, reducing acceptance to the classic Metropolis ratio $\alpha = \min\left(1, \frac{\tilde{p}(x')}{\tilde{p}(x_t)}\right)$.
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mcmc-controls-bar">
+              <div class="mcmc-input-group">
+                <label>Proposal Step Width $\sigma_{\text{prop}}$:</label>
+                <input type="range" id="mcmcSigma" min="0.1" max="2.5" step="0.1" value="0.8">
+                <span id="mcmcSigmaVal">0.80</span>
+              </div>
+              <button class="btn-sim primary" id="mcmcRunBtn">Start MCMC Sampler</button>
+              <button class="btn-sim outline" id="mcmcResetBtn">Clear Samples</button>
+              <span class="mcmc-stat">Samples Drawn: <strong id="mcmcSampleCount">0</strong></span>
+              <span class="mcmc-stat">Acceptance Rate: <strong id="mcmcAcceptRate">0.0%</strong></span>
+            </div>
+
+            <div class="mcmc-tuning-hint">
+              <span class="hint-pill">Optimal 1D Acceptance Rate: <strong>~44%</strong> (Gelman-Roberts Rule)</span>
+              <span class="hint-pill">Small $\sigma$ (&lt;0.3): High accept (~85%), poor mixing</span>
+              <span class="hint-pill">Large $\sigma$ (&gt;2.0): Low accept (&lt;15%), high rejection</span>
+            </div>
+
+            <div class="mcmc-canvas-wrapper">
+              <canvas id="mcmcCanvas" width="700" height="280"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           MODULE 8: APPLICATIONS & ADVANCED FRONTIERS
+           ========================================================= -->
+      <section class="module-card" id="module-8">
+        <div class="module-header">
+          <span class="module-chip">Module 08</span>
+          <h2 class="module-heading">Real-World Applications & Advanced Frontiers</h2>
+          <p class="module-sub">PageRank, N-Gram Text Generation, Hidden Markov Models, and CTMCs</p>
+        </div>
+
+        <div class="module-body">
+          <div class="advanced-topics-grid">
+            <!-- Topic 1: PageRank Elaborated -->
+            <div class="topic-card full-width-card" id="pagerankDetailedSection">
+              <div class="topic-header-row">
+                <span class="topic-badge">Application Spotlight</span>
+                <h3 class="topic-main-title">🌐 Google's PageRank & The Random Surfer Model</h3>
+                <p class="paragraph topic-lead">
+                  In 1998, Larry Page and Sergey Brin revolutionized internet search by viewing the entire World Wide Web as a colossal Markov chain, where authority is quantified by the invariant stationary probability measure $\pi$.
+                </p>
+              </div>
+
+              <!-- Key Concepts Grid -->
+              <div class="pagerank-concepts-grid">
+                <div class="pr-concept-card">
+                  <div class="concept-icon">🔗</div>
+                  <h4 class="concept-title">Hyperlinks as Recursive Recommendations</h4>
+                  <p class="concept-desc">
+                    A hyperlink from page $u$ to page $v$ ($u \to v$) is treated as a vote of confidence. Crucially, a vote from a high-authority page carries significantly more weight than a vote from an obscure page:
+                  </p>
+                  <div class="katex-display">
+                    $$\text{PR}(v) = \sum_{u \in B_v} \frac{\text{PR}(u)}{d_{\text{out}}(u)}$$
+                  </div>
+                  <p class="concept-desc">where $B_v$ is the set of all pages linking into $v$, and $d_{\text{out}}(u)$ is the out-degree of page $u$.</p>
+                </div>
+
+                <div class="pr-concept-card">
+                  <div class="concept-icon">⚠️</div>
+                  <h4 class="concept-title">The Two Web Traps (Why Plain Markov Chains Fail)</h4>
+                  <ul class="prop-list" style="font-size: 0.84rem;">
+                    <li><strong>Dangling Nodes (Dead Ends):</strong> Pages with $d_{\text{out}}(u) = 0$ (e.g. PDFs, data files). A random surfer gets stuck; probability leaks out of the network ($\sum_j P_{uj} = 0$).</li>
+                    <li><strong>Spider Traps / Rank Sinks:</strong> Closed cyclic subgraphs with no external links. Without teleportation, 100% of all global PageRank is irreversibly siphoned into the trap.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Mathematical Formulation Box -->
+              <div class="math-callout definition-box">
+                <div class="box-title">The Google Matrix $G$ & Random Teleportation</div>
+                <p class="paragraph">
+                  To eliminate both dead ends and spider traps, Page and Brin introduced a <strong>damping factor</strong> $d \in (0, 1)$ (typically $d = 0.85$):
+                </p>
+                <div class="katex-display">
+                  $$G = d P^* + (1 - d) \frac{1}{N} \mathbf{1} \mathbf{1}^T$$
+                </div>
+                <ul class="prop-list">
+                  <li><strong>With probability $d \approx 0.85$:</strong> The surfer follows a random hyperlink on the current page ($P^*_{ij} = 1/d_{\text{out}}(i)$, or $1/N$ if $i$ is a dangling node).</li>
+                  <li><strong>With probability $1 - d \approx 0.15$:</strong> The surfer gets bored and <em>teleports</em> uniformly to any page on the Web ($\mathbb{P} = 1/N$).</li>
+                </ul>
+              </div>
+
+              <!-- Perron-Frobenius & Convergence Properties -->
+              <div class="math-callout theorem-box">
+                <div class="box-title">Perron-Frobenius Guarantees & Power Iteration Convergence</div>
+                <ul class="prop-list">
+                  <li><strong>Strict Positivity & Ergodicity:</strong> Every entry $G_{ij} \ge \frac{1-d}{N} > 0$. Thus $G$ is strictly positive, irreducible, and aperiodic.</li>
+                  <li><strong>Unique Stationary State:</strong> By the Perron-Frobenius Theorem, the principal eigenvalue $\lambda_1 = 1$ has a unique strictly positive eigenvector $\pi > 0$ satisfying $\pi G = \pi$ and $\sum \pi_i = 1$.</li>
+                  <li><strong>Exponential Spectral Convergence:</strong> The second eigenvalue is bounded by $|\lambda_2| \le d = 0.85$. The <strong>Power Iteration algorithm</strong> $\pi^{(k+1)} = \pi^{(k)} G$ converges geometrically:
+                    $$\|\pi^{(k)} - \pi\|_1 \le d^k \|\pi^{(0)} - \pi\|_1$$
+                    In practice, only $50 - 100$ sparse matrix-vector multiplications are needed to rank billions of web pages!
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Worked Numerical Example -->
+              <div class="example-box" style="margin-top: 20px;">
+                <div class="example-badge">Numerical Case Study &bull; 4-Page Mini-Web</div>
+                <h4 class="example-title">Calculating Exact PageRank on a 4-Node Web Graph ($d = 0.85$)</h4>
+                <p class="paragraph">
+                  Consider a 4-page network with pages $\mathcal{S} = \{A, B, C, D\}$ and hyperlinks: $A \to B, C$; $B \to C$; $C \to A$; $D \to C$.
+                </p>
+
+                <!-- SVG Graph for 4-page mini web -->
+                <div class="diagram-container">
+                  <span class="diagram-caption">4-Page Web Network Topology:</span>
+                  <svg class="example-svg" viewBox="0 0 680 180" width="100%" height="180">
+                    <defs>
+                      <marker id="arr-pr" viewBox="0 0 10 10" refX="20" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                        <path d="M 0 1 L 10 5 L 0 9 z" fill="#818cf8"/>
+                      </marker>
+                      <marker id="arr-pr-gold" viewBox="0 0 10 10" refX="24" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                        <path d="M 0 1 L 10 5 L 0 9 z" fill="#f59e0b"/>
+                      </marker>
+                    </defs>
+
+                    <!-- Links -->
+                    <!-- A -> B (prob 1/2) -->
+                    <path d="M 125,50 L 315,50" stroke="#818cf8" stroke-width="2.5" fill="none" marker-end="url(#arr-pr)"/>
+                    <rect x="210" y="38" width="30" height="16" rx="3" fill="#0f1422"/>
+                    <text x="225" y="50" fill="#818cf8" font-size="10" font-family="'Fira Code', monospace" text-anchor="middle">½</text>
+
+                    <!-- A -> C (prob 1/2) -->
+                    <path d="M 115,70 L 315,130" stroke="#818cf8" stroke-width="2.5" fill="none" marker-end="url(#arr-pr)"/>
+                    <rect x="200" y="90" width="30" height="16" rx="3" fill="#0f1422"/>
+                    <text x="215" y="102" fill="#818cf8" font-size="10" font-family="'Fira Code', monospace" text-anchor="middle">½</text>
+
+                    <!-- B -> C (prob 1) -->
+                    <path d="M 335,70 L 335,120" stroke="#818cf8" stroke-width="2.5" fill="none" marker-end="url(#arr-pr)"/>
+                    <rect x="345" y="88" width="24" height="16" rx="3" fill="#0f1422"/>
+                    <text x="357" y="100" fill="#818cf8" font-size="10" font-family="'Fira Code', monospace" text-anchor="middle">1</text>
+
+                    <!-- C -> A (prob 1) -->
+                    <path d="M 315,145 Q 210,175 115,75" stroke="#f59e0b" stroke-width="2.5" fill="none" marker-end="url(#arr-pr-gold)"/>
+                    <rect x="195" y="150" width="24" height="16" rx="3" fill="#0f1422"/>
+                    <text x="207" y="162" fill="#f59e0b" font-size="10" font-family="'Fira Code', monospace" text-anchor="middle">1</text>
+
+                    <!-- D -> C (prob 1) -->
+                    <path d="M 535,140 L 360,140" stroke="#818cf8" stroke-width="2.5" fill="none" marker-end="url(#arr-pr)"/>
+                    <rect x="440" y="128" width="24" height="16" rx="3" fill="#0f1422"/>
+                    <text x="452" y="140" fill="#818cf8" font-size="10" font-family="'Fira Code', monospace" text-anchor="middle">1</text>
+
+                    <!-- Nodes -->
+                    <!-- Node A -->
+                    <circle cx="105" cy="55" r="22" fill="#182238" stroke="#818cf8" stroke-width="3"/>
+                    <text x="105" y="59" fill="#fff" font-size="13" font-weight="700" text-anchor="middle" font-family="'Outfit', sans-serif">Page A</text>
+                    <text x="105" y="24" fill="#94a3b8" font-size="9.5" font-family="'Fira Code', monospace" text-anchor="middle">PR ≈ 38.7% (#2)</text>
+
+                    <!-- Node B -->
+                    <circle cx="335" cy="50" r="18" fill="#182238" stroke="#818cf8" stroke-width="2.5"/>
+                    <text x="335" y="54" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="'Outfit', sans-serif">Page B</text>
+                    <text x="335" y="24" fill="#94a3b8" font-size="9.5" font-family="'Fira Code', monospace" text-anchor="middle">PR ≈ 12.9% (#3)</text>
+
+                    <!-- Node C (Authority Hub #1) -->
+                    <circle cx="335" cy="140" r="26" fill="rgba(245,158,11,0.2)" stroke="#f59e0b" stroke-width="3.5"/>
+                    <text x="335" y="145" fill="#f59e0b" font-size="14" font-weight="800" text-anchor="middle" font-family="'Outfit', sans-serif">Page C</text>
+                    <text x="335" y="182" fill="#f59e0b" font-size="11" font-weight="700" font-family="'Plus Jakarta Sans', sans-serif" text-anchor="middle">Rank #1: PR ≈ 44.6%</text>
+
+                    <!-- Node D (Dangling / Inbound Leaf) -->
+                    <circle cx="555" cy="140" r="16" fill="#182238" stroke="#64748b" stroke-width="2"/>
+                    <text x="555" y="144" fill="#cbd5e1" font-size="11" font-weight="700" text-anchor="middle" font-family="'Outfit', sans-serif">Page D</text>
+                    <text x="555" y="172" fill="#64748b" font-size="9.5" font-family="'Fira Code', monospace" text-anchor="middle">PR ≈ 3.8% (#4)</text>
+                  </svg>
+                </div>
+
+                <div class="example-solution">
+                  <span class="solution-label">Matrix Construction & Power Iteration Solution:</span>
+                  <ul class="prop-list">
+                    <li><strong>Raw Link Matrix $P$:</strong>
+                      $$\begin{aligned}
+                      P = \begin{pmatrix}
+                      0 & 0.5 & 0.5 & 0 \\
+                      0 & 0 & 1 & 0 \\
+                      1 & 0 & 0 & 0 \\
+                      0 & 0 & 1 & 0
+                      \end{pmatrix}
+                      \end{aligned}$$
+                    </li>
+                    <li><strong>Google Matrix with Damping Factor $d = 0.85$:</strong>
+                      $$G = 0.85 \begin{pmatrix}
+                      0 & 0.5 & 0.5 & 0 \\
+                      0 & 0 & 1 & 0 \\
+                      1 & 0 & 0 & 0 \\
+                      0 & 0 & 1 & 0
+                      \end{pmatrix} + \frac{0.15}{4} \begin{pmatrix}
+                      1 & 1 & 1 & 1 \\
+                      1 & 1 & 1 & 1 \\
+                      1 & 1 & 1 & 1 \\
+                      1 & 1 & 1 & 1
+                      \end{pmatrix} = \begin{pmatrix}
+                      0.0375 & 0.4625 & 0.4625 & 0.0375 \\
+                      0.0375 & 0.0375 & 0.8875 & 0.0375 \\
+                      0.8875 & 0.0375 & 0.0375 & 0.0375 \\
+                      0.0375 & 0.0375 & 0.8875 & 0.0375
+                      \end{pmatrix}$$
+                    </li>
+                    <li><strong>Exact Stationary PageRank Vector $\pi = \pi G$:</strong>
+                      $$\pi = \begin{bmatrix} \pi_A & \pi_B & \pi_C & \pi_D \end{bmatrix} \approx \begin{bmatrix} 0.3870 & 0.1290 & 0.4465 & 0.0375 \end{bmatrix}$$
+                    </li>
+                    <li><strong>Mathematical Insights:</strong>
+                      <ol style="margin-top: 6px; padding-left: 18px;">
+                        <li><strong>Page C is Ranked #1 ($\approx 44.65\%$):</strong> It receives incoming hyperlinks from all 3 other pages ($A, B, D$).</li>
+                        <li><strong>Page A is Ranked #2 ($\approx 38.70\%$):</strong> Even though it only has 1 incoming link, that link comes directly from the highest-authority page ($C$)!</li>
+                        <li><strong>Page D is Ranked #4 ($\approx 3.75\%$):</strong> Having zero incoming links, it is visited purely via random teleportation $(1-d)/4 = 0.0375$.</li>
+                      </ol>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Interactive Live PageRank Simulator (Simulation 06) -->
+              <div class="interactive-container" id="simPageRankSection" style="margin-top: 24px;">
+                <div class="interactive-header">
+                  <div class="sim-badge">Interactive Simulation 06</div>
+                  <h4 class="sim-title">Live PageRank Power Iteration & Damping Explorer</h4>
+                  <p class="sim-desc">
+                    Adjust the damping factor $d$, step through the Power Iteration algorithm ($\pi^{(k+1)} = \pi^{(k)} G$), and watch the node sizes and rankings adjust dynamically.
+                  </p>
+                </div>
+
+                <div class="pagerank-controls-bar">
+                  <div class="mcmc-input-group">
+                    <label for="prDamping">Damping Factor $d$:</label>
+                    <input type="range" id="prDamping" min="0.0" max="1.0" step="0.05" value="0.85">
+                    <span id="prDampingVal">0.85</span>
+                  </div>
+
+                  <div class="graphwalk-btn-group">
+                    <button class="btn-sim primary" id="prStepBtn">Step Power Iteration</button>
+                    <button class="btn-sim secondary" id="prRunBtn">Run to Convergence</button>
+                    <button class="btn-sim outline" id="prResetBtn">Reset Uniform $\pi^{(0)}$</button>
+                  </div>
+                </div>
+
+                <div class="graphwalk-main-grid">
+                  <!-- Canvas View with dynamic node sizes -->
+                  <div class="canvas-graphwalk-wrapper">
+                    <canvas id="pagerankCanvas" width="520" height="320"></canvas>
+                    <div class="canvas-drag-hint">Node size scales with PageRank $\pi_i$</div>
+                    <div class="graph-walker-overlay">
+                      <span>Iteration $k$: <strong id="valPrIteration">0</strong></span>
+                      <span>Max $\Delta$: <strong id="valPrDelta">0.0000</strong></span>
+                    </div>
+                  </div>
+
+                  <!-- Real-time Leaderboard & Convergence Table -->
+                  <div class="graphwalk-distribution-card">
+                    <h5 class="dist-card-title">Live PageRank Scores & Authority Leaderboard</h5>
+                    <div class="dist-table-wrapper">
+                      <table class="matrix-table-analytical dist-comp-table">
+                        <thead>
+                          <tr>
+                            <th>Rank</th>
+                            <th>Page</th>
+                            <th>Inbound / Outbound</th>
+                            <th>PageRank Score ($\pi_i$)</th>
+                          </tr>
+                        </thead>
+                        <tbody id="pagerankTableBody">
+                          <!-- Dynamically populated -->
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <div class="dist-metrics-summary">
+                      <div class="metric-pill">
+                        <span class="m-label">Convergence Status:</span>
+                        <strong class="m-val highlight" id="valPrStatus">Ready</strong>
+                      </div>
+                      <div class="metric-pill">
+                        <span class="m-label">Theoretical Second Eigenvalue $|\lambda_2| \le d$:</span>
+                        <strong class="m-val" id="valPrLambda2">0.8500</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Topic 2: N-Gram Markov Text Generator Elaborated -->
+            <div class="topic-card full-width-card" id="ngramDetailedSection" style="margin-top: 20px;">
+              <div class="topic-header-row">
+                <span class="topic-badge" style="color: var(--accent-cyan); background: rgba(6, 182, 212, 0.15); border-color: rgba(6, 182, 212, 0.3);">NLP & Generative Modeling</span>
+                <h3 class="topic-main-title">📝 N-Gram Markov Text Generation & Statistical Language Models</h3>
+                <p class="paragraph topic-lead">
+                  Before deep transformer architectures (like GPT), probabilistic language modeling was powered by discrete-time Markov chains, where words (or characters) represent stochastic states and transitions capture grammatical and semantic syntax.
+                </p>
+              </div>
+
+              <!-- Key Concepts Grid -->
+              <div class="pagerank-concepts-grid">
+                <div class="pr-concept-card">
+                  <div class="concept-icon">🔤</div>
+                  <h4 class="concept-title">The $k$-th Order Markov Language Assumption</h4>
+                  <p class="concept-desc">
+                    By the chain rule of probability, the joint distribution of a text sequence $W = (w_1, \dots, w_T)$ is:
+                  </p>
+                  <div class="katex-display">
+                    $$P(w_1, \dots, w_T) = \prod_{t=1}^T P(w_t \mid w_1, \dots, w_{t-1})$$
+                  </div>
+                  <p class="concept-desc">
+                    The $k$-th order Markov assumption approximates the infinite history with just the preceding $k$ tokens: $P(w_t \mid w_1, \dots, w_{t-1}) \approx P(w_t \mid w_{t-k}, \dots, w_{t-1})$.
+                  </p>
+                </div>
+
+                <div class="pr-concept-card">
+                  <div class="concept-icon">📊</div>
+                  <h4 class="concept-title">Maximum Likelihood Estimation (MLE) & Temperature</h4>
+                  <p class="concept-desc">
+                    Empirical transition probabilities are calculated directly by n-gram frequency counting on a training corpus $\mathcal{D}$:
+                  </p>
+                  <div class="katex-display">
+                    $$\hat{P}(w_t \mid w_{t-k:t-1}) = \frac{\text{Count}(w_{t-k}, \dots, w_t)}{\text{Count}(w_{t-k}, \dots, w_{t-1})}$$
+                  </div>
+                  <p class="concept-desc">
+                    <strong>Sampling Temperature ($\tau$):</strong> Probability logits are scaled via $P_\tau(w) \propto [P(w)]^{1/\tau}$. Low $\tau \to 0$ forces greedy deterministic output, while $\tau = 1.0$ performs exact Markov sampling.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Worked Numerical Example -->
+              <div class="example-box" style="margin-top: 14px;">
+                <div class="example-badge">Worked Linguistic Case Study &bull; Bigram vs Trigram Transitions</div>
+                <h4 class="example-title">State Transitions on a Mini-Corpus</h4>
+                <p class="paragraph">
+                  Consider the training corpus: <code style="color: var(--accent-amber); font-size: 0.92rem;">"the cat sat on the mat and the cat sat on the hat"</code>
+                </p>
+
+                <div class="dist-table-wrapper" style="margin: 14px 0;">
+                  <table class="matrix-table-analytical dist-comp-table">
+                    <thead>
+                      <tr>
+                        <th>Prefix State $S_t$ ($k$-Gram)</th>
+                        <th>Candidate Next Token ($w_{t+1}$)</th>
+                        <th>Corpus Count</th>
+                        <th>Transition Probability $P(w_{t+1} \mid S_t)$</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th style="color: var(--primary-light);">"the" (Bigram State)</th>
+                        <td>"cat"</td>
+                        <td>2 / 4</td>
+                        <td style="color: var(--accent-cyan); font-weight: 700;">$P = 2/4 = 50.0\%$</td>
+                      </tr>
+                      <tr>
+                        <th style="color: var(--primary-light);">"the" (Bigram State)</th>
+                        <td>"mat"</td>
+                        <td>1 / 4</td>
+                        <td style="color: var(--accent-cyan); font-weight: 700;">$P = 1/4 = 25.0\%$</td>
+                      </tr>
+                      <tr>
+                        <th style="color: var(--primary-light);">"the" (Bigram State)</th>
+                        <td>"hat"</td>
+                        <td>1 / 4</td>
+                        <td style="color: var(--accent-cyan); font-weight: 700;">$P = 1/4 = 25.0\%$</td>
+                      </tr>
+                      <tr class="highlight-active-row">
+                        <th style="color: var(--accent-amber);">("the", "cat") (Trigram State)</th>
+                        <td>"sat"</td>
+                        <td>2 / 2</td>
+                        <td style="color: var(--accent-amber); font-weight: 700;">$P = 2/2 = 100.0\%$ (Deterministic)</td>
+                      </tr>
+                      <tr>
+                        <th style="color: var(--primary-light);">("cat", "sat") (Trigram State)</th>
+                        <td>"on"</td>
+                        <td>2 / 2</td>
+                        <td style="color: var(--accent-cyan); font-weight: 700;">$P = 2/2 = 100.0\%$</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="example-solution">
+                  <span class="solution-label">Trade-off Insight:</span>
+                  <p class="paragraph" style="font-size: 0.88rem; color: #cbd5e1; margin-top: 4px;">
+                    <strong>Order $k=1$ (Bigram):</strong> High state connectivity, but low linguistic coherence (can produce grammatically loose sentences).<br>
+                    <strong>Order $k \ge 3$ (4-gram+):</strong> High phrase coherence, but risks exact memorization of training text and suffers from the zero-frequency sparsity problem on unseen prefixes.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Interactive Simulation 07: Live Multi-Order Markov Text Engine -->
+              <div class="interactive-container" id="simMarkovTextSection" style="margin-top: 24px;">
+                <div class="interactive-header">
+                  <div class="sim-badge">Interactive Simulation 07</div>
+                  <h4 class="sim-title">Live Multi-Order ($k=1, 2, 3$) Markov Text Engine & Probability Inspector</h4>
+                  <p class="sim-desc">
+                    Train a live Markov language model on classic literature or custom text. Inspect candidate next-token transition distributions and generate text step-by-step or in full streams.
+                  </p>
+                </div>
+
+                <!-- Training Corpus & Presets -->
+                <div class="ngram-trainer-box">
+                  <div class="trainer-header-row">
+                    <label class="trainer-label">Training Corpus:</label>
+                    <div class="preset-pills-row">
+                      <span class="preset-label">Load Preset:</span>
+                      <button class="btn-preset active" data-preset="markov">Probability Theory</button>
+                      <button class="btn-preset" data-preset="shakespeare">Shakespeare (Hamlet)</button>
+                      <button class="btn-preset" data-preset="alice">Alice in Wonderland</button>
+                    </div>
+                  </div>
+                  <textarea id="textGenInput" rows="4" class="text-input" placeholder="Enter or edit custom training corpus...">Probability is the branch of mathematics concerning numerical descriptions of how likely an event is to occur. Probability theory is utilized in statistics, mathematics, science, finance, and artificial intelligence to model stochastic processes and Markov chains. A discrete-time Markov chain is a sequence of random variables with the Markov property, where the conditional probability distribution of the next state depends only upon the current state and not on the preceding sequence of events.</textarea>
+                </div>
+
+                <!-- Controls Bar -->
+                <div class="ngram-controls-bar">
+                  <div class="mcmc-input-group">
+                    <label for="ngramOrderSelect">Markov Order ($k$):</label>
+                    <select id="ngramOrderSelect" class="sim-select">
+                      <option value="1">Order k=1 (Bigram / 1-Word History)</option>
+                      <option value="2" selected>Order k=2 (Trigram / 2-Word History)</option>
+                      <option value="3">Order k=3 (4-Gram / 3-Word History)</option>
+                    </select>
+                  </div>
+
+                  <div class="mcmc-input-group">
+                    <label for="ngramTempSlider">Temperature ($\tau$):</label>
+                    <input type="range" id="ngramTempSlider" min="0.2" max="2.0" step="0.1" value="1.0">
+                    <span id="ngramTempVal">1.00</span>
+                  </div>
+
+                  <div class="graphwalk-btn-group">
+                    <button class="btn-sim primary" id="generateTextBtn">
+                      <svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                      <span>Generate Full Stream</span>
+                    </button>
+                    <button class="btn-sim secondary" id="stepTextBtn">
+                      <svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-7.85-1.42 1.42 5.43 5.43H5v2z"/></svg>
+                      <span>Step 1 Word</span>
+                    </button>
+                    <button class="btn-sim outline" id="resetTextBtn">Clear Output</button>
+                  </div>
+                </div>
+
+                <!-- Live Generated Output & Transition Candidate Inspector Grid -->
+                <div class="ngram-output-grid">
+                  <!-- Output Box -->
+                  <div class="ngram-output-card">
+                    <div class="output-card-header">
+                      <span class="out-title">Generated Probabilistic Stream:</span>
+                      <span class="out-stats" id="ngramTokenCount">0 tokens generated</span>
+                    </div>
+                    <div class="gen-output-card" id="genTextOutput" style="min-height: 120px;">
+                      <em>Click "Generate Full Stream" or "Step 1 Word" to begin Markov text generation...</em>
+                    </div>
+                  </div>
+
+                  <!-- Live Next-Word Candidate Distribution Inspector -->
+                  <div class="ngram-candidates-card">
+                    <div class="candidates-header">
+                      <span class="cand-title">Active State ($S_t$) Candidate Distribution:</span>
+                      <span class="cand-state-badge" id="ngramActiveStateBadge">State: [None]</span>
+                    </div>
+                    <div class="candidates-list" id="ngramCandidatesList">
+                      <div class="empty-candidates-hint">Start stepping to view live candidate transition probabilities.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Topic 3: Hidden Markov Models (HMM) Elaborated -->
+            <div class="topic-card full-width-card" id="hmmDetailedSection" style="margin-top: 20px;">
+              <div class="topic-header-row">
+                <span class="topic-badge" style="color: var(--accent-pink); background: rgba(236, 72, 153, 0.15); border-color: rgba(236, 72, 153, 0.3);">Stochastic Inference & Latent States</span>
+                <h3 class="topic-main-title">🕵️ Hidden Markov Models (HMM) & Dynamic Programming</h3>
+                <p class="paragraph topic-lead">
+                  In many physical, biological, and financial systems, the underlying Markov process is unobservable (hidden), and can only be indirectly perceived through noisy, probabilistic emissions.
+                </p>
+              </div>
+
+              <!-- Mathematical Definition & 5-Tuple -->
+              <div class="math-callout definition-box">
+                <div class="box-title">Formal Definition of an HMM: The 5-Tuple $\lambda = (S, V, A, B, \pi)$</div>
+                <div class="pagerank-concepts-grid" style="margin-top: 10px;">
+                  <div class="pr-concept-card">
+                    <h5 class="concept-title" style="color: var(--primary-light);">1. Latent & Observable Alphabets</h5>
+                    <ul class="prop-list" style="font-size: 0.84rem;">
+                      <li><strong>Hidden State Space:</strong> $S = \{s_1, s_2, \dots, s_N\}$, with latent variable $X_t \in S$ at time $t$.</li>
+                      <li><strong>Observation Vocabulary:</strong> $V = \{v_1, v_2, \dots, v_M\}$, with visible emission $Y_t \in V$.</li>
+                      <li><strong>Initial State Vector:</strong> $\pi = [\pi_i]$, where $\pi_i = P(X_1 = s_i)$ and $\sum \pi_i = 1$.</li>
+                    </ul>
+                  </div>
+
+                  <div class="pr-concept-card">
+                    <h5 class="concept-title" style="color: var(--accent-cyan);">2. Transition & Emission Probabilities</h5>
+                    <ul class="prop-list" style="font-size: 0.84rem;">
+                      <li><strong>Hidden Transition Matrix $A \in \mathbb{R}^{N \times N}$:</strong>
+                        $$a_{ij} = P(X_{t+1} = s_j \mid X_t = s_i)$$
+                      </li>
+                      <li><strong>Emission Probability Matrix $B \in \mathbb{R}^{N \times M}$:</strong>
+                        $$b_j(k) = P(Y_t = v_k \mid X_t = s_j)$$
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="box-footer" style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 10px;">
+                  <strong>The Joint Probability Factorization:</strong> Under the first-order Markov assumption and conditional emission independence:
+                  <div class="katex-display">
+                    $$P(X_{1:T}, Y_{1:T} \mid \lambda) = \pi_{X_1} b_{X_1}(Y_1) \prod_{t=2}^T a_{X_{t-1}, X_t} b_{X_t}(Y_t)$$
+                  </div>
+                </div>
+              </div>
+
+              <!-- The Three Fundamental Problems Grid -->
+              <div class="hmm-problems-grid" style="margin-top: 16px;">
+                <div class="topic-card" style="background: rgba(255,255,255,0.02);">
+                  <span class="step-num" style="background: rgba(99, 102, 241, 0.2); color: var(--primary-light);">Problem 1</span>
+                  <h4 class="concept-title" style="margin-top: 8px;">Evaluation: Forward-Backward</h4>
+                  <p class="paragraph" style="font-size: 0.84rem; color: #cbd5e1;">
+                    <strong>Goal:</strong> Compute the exact marginal likelihood of observations $P(Y_{1:T} \mid \lambda)$.
+                  </p>
+                  <p class="paragraph" style="font-size: 0.82rem; color: var(--text-muted);">
+                    Direct summation over all $N^T$ hidden paths is $O(N^T \cdot T)$ (intractable). The <strong>Forward Algorithm</strong> uses dynamic programming with the forward variable $\alpha_t(i) = P(Y_1, \dots, Y_t, X_t = s_i \mid \lambda)$:
+                  </p>
+                  <div class="katex-display" style="font-size: 0.88rem;">
+                    $$\alpha_{t+1}(j) = \left[ \sum_{i=1}^N \alpha_t(i) a_{ij} \right] b_j(Y_{t+1})$$
+                  </div>
+                  <p class="paragraph" style="font-size: 0.8rem; color: var(--accent-green);">Complexity reduced to $O(N^2 T)$!</p>
+                </div>
+
+                <div class="topic-card" style="background: rgba(255,255,255,0.02); border-color: rgba(245, 158, 11, 0.3);">
+                  <span class="step-num" style="background: rgba(245, 158, 11, 0.2); color: var(--accent-amber);">Problem 2</span>
+                  <h4 class="concept-title" style="margin-top: 8px; color: var(--accent-amber);">Decoding: Viterbi Algorithm</h4>
+                  <p class="paragraph" style="font-size: 0.84rem; color: #cbd5e1;">
+                    <strong>Goal:</strong> Discover the single most probable sequence of hidden states $X^* = \arg\max_{X} P(X \mid Y, \lambda)$.
+                  </p>
+                  <p class="paragraph" style="font-size: 0.82rem; color: var(--text-muted);">
+                    Maintains the max-path score $\delta_t(j)$ and backpointers $\psi_t(j)$ across the time trellis:
+                  </p>
+                  <div class="katex-display" style="font-size: 0.88rem;">
+                    $$\delta_t(j) = \max_{1 \le i \le N} \left[ \delta_{t-1}(i) a_{ij} \right] \cdot b_j(Y_t)$$
+                  </div>
+                  <p class="paragraph" style="font-size: 0.8rem; color: var(--accent-amber);">Backtracking yields the global optimal trajectory.</p>
+                </div>
+
+                <div class="topic-card" style="background: rgba(255,255,255,0.02);">
+                  <span class="step-num" style="background: rgba(236, 72, 153, 0.2); color: var(--accent-pink);">Problem 3</span>
+                  <h4 class="concept-title" style="margin-top: 8px;">Learning: Baum-Welch (EM)</h4>
+                  <p class="paragraph" style="font-size: 0.84rem; color: #cbd5e1;">
+                    <strong>Goal:</strong> Adjust parameters $\lambda = (A, B, \pi)$ to maximize $P(Y \mid \lambda)$ given unannotated emissions.
+                  </p>
+                  <p class="paragraph" style="font-size: 0.82rem; color: var(--text-muted);">
+                    An Expectation-Maximization (EM) iterative scheme:
+                  </p>
+                  <ul class="prop-list" style="font-size: 0.78rem;">
+                    <li><strong>E-Step:</strong> Compute posterior state occupations $\gamma_t(i)$ and edge transitions $\xi_t(i, j)$ via forward-backward passes.</li>
+                    <li><strong>M-Step:</strong> Re-estimate expected counts $\hat{a}_{ij}$ and $\hat{b}_j(k)$ until convergence.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Worked Example: The Dishonest Casino -->
+              <div class="example-box" style="margin-top: 20px;">
+                <div class="example-badge">Classic HMM Case Study &bull; The Occasionally Dishonest Casino</div>
+                <h4 class="example-title">Detecting Loaded Dice via Latent State Decoding</h4>
+                <p class="paragraph">
+                  A casino dealer alternates secretly between a <strong>Fair Die ($F$)</strong> and a <strong>Loaded Die ($L$)</strong> where the number $6$ has a high probability of $0.50$.
+                </p>
+
+                <div class="dist-table-wrapper" style="margin: 14px 0;">
+                  <table class="matrix-table-analytical dist-comp-table">
+                    <thead>
+                      <tr>
+                        <th>Hidden State</th>
+                        <th>Transition Probabilities</th>
+                        <th>Emission Probabilities $P(\text{Roll} = k)$</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th style="color: var(--accent-cyan);">Fair Die ($F$)</th>
+                        <td>$P(F \to F) = 0.95, \quad P(F \to L) = 0.05$</td>
+                        <td>$P(1)=P(2)=P(3)=P(4)=P(5)=P(6) = \frac{1}{6} \approx 16.67\%$</td>
+                      </tr>
+                      <tr class="highlight-active-row">
+                        <th style="color: var(--accent-amber);">Loaded Die ($L$)</th>
+                        <td>$P(L \to L) = 0.90, \quad P(L \to F) = 0.10$</td>
+                        <td>$P(6) = 50.0\%, \quad P(1)=P(2)=P(3)=P(4)=P(5) = 10.0\%$</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="example-solution">
+                  <span class="solution-label">Why Intuition Fails Without HMMs:</span>
+                  <p class="paragraph" style="font-size: 0.88rem; color: #cbd5e1; margin-top: 4px;">
+                    If you see a single roll of $6$, it could easily come from the Fair Die ($16.7\%$). But if you observe a cluster of consecutive sixes $\mathbf{Y} = (6, 6, 6, 6, 2, 6)$, the likelihood ratio skyrockets by a factor of $(0.50 / 0.1667)^5 \approx 243\times$, causing the Viterbi trellis to decisively switch the inferred hidden state from <strong>Fair</strong> to <strong>Loaded</strong>!
+                  </p>
+                </div>
+              </div>
+
+              <!-- Interactive Simulation 08: Live Interactive Viterbi Decoder & Trellis Visualizer -->
+              <div class="interactive-container" id="simHmmSection" style="margin-top: 24px;">
+                <div class="interactive-header">
+                  <div class="sim-badge">Interactive Simulation 08</div>
+                  <h4 class="sim-title">Live Viterbi Trellis Decoder & Latent State Posterior Visualizer</h4>
+                  <p class="sim-desc">
+                    Input or randomly roll a sequence of observations. Step through the dynamic programming Viterbi trellis, visualize node path scores, and decode the optimal hidden sequence in real time.
+                  </p>
+                </div>
+
+                <!-- Model Preset Selector & Sequence Input -->
+                <div class="hmm-controls-top">
+                  <div class="trainer-header-row">
+                    <label class="trainer-label">HMM Scenario:</label>
+                    <div class="preset-pills-row">
+                      <button class="btn-preset active" data-hmm="casino">🎲 Dishonest Casino (Fair / Loaded)</button>
+                      <button class="btn-preset" data-hmm="weather">☀️ Weather & Mood (Rainy / Sunny)</button>
+                      <button class="btn-preset" data-hmm="cpg">🧬 DNA CpG Islands</button>
+                    </div>
+                  </div>
+
+                  <div class="hmm-input-bar">
+                    <div class="mcmc-input-group" style="flex: 1;">
+                      <label for="hmmObsInput">Observation Sequence:</label>
+                      <input type="text" id="hmmObsInput" class="text-input" style="padding: 6px 12px; font-family: 'Fira Code', monospace; font-size: 0.9rem;" value="6, 6, 6, 2, 6, 6, 1, 3, 6, 6">
+                    </div>
+                    <button class="btn-sim outline" id="hmmRandomSeqBtn">🎲 Roll Random Sequence</button>
+                  </div>
+                </div>
+
+                <!-- Execution Controls -->
+                <div class="ngram-controls-bar">
+                  <div class="graphwalk-btn-group">
+                    <button class="btn-sim primary" id="hmmDecodeBtn">
+                      <svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                      <span>Decode Optimal Viterbi Path</span>
+                    </button>
+                    <button class="btn-sim secondary" id="hmmStepBtn">
+                      <svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-7.85-1.42 1.42 5.43 5.43H5v2z"/></svg>
+                      <span>Step Trellis Forward</span>
+                    </button>
+                    <button class="btn-sim outline" id="hmmResetBtn">Reset Trellis</button>
+                  </div>
+
+                  <div class="hmm-summary-stats">
+                    <span class="mcmc-stat">Trellis Step: <strong id="valHmmStep">0 / 10</strong></span>
+                    <span class="mcmc-stat">Sequence Log-Likelihood: <strong id="valHmmLogLikelihood">—</strong></span>
+                  </div>
+                </div>
+
+                <!-- Trellis Canvas & Decoded Path Display -->
+                <div class="canvas-graphwalk-wrapper" style="margin-bottom: 16px;">
+                  <canvas id="hmmTrellisCanvas" width="700" height="260"></canvas>
+                  <div class="canvas-drag-hint">Dynamic Viterbi Trellis ($\delta_t(s)$ & Backpointers)</div>
+                  <div class="graph-walker-overlay">
+                    <span>Decoded State $X_t^*$: <strong id="valHmmCurrentState" style="color: var(--accent-amber);">—</strong></span>
+                    <span>Most Probable Path Probability: <strong id="valHmmMaxProb">—</strong></span>
+                  </div>
+                </div>
+
+                <!-- Decoded Sequence Ribbon & Posterior Breakdown -->
+                <div class="hmm-results-grid">
+                  <div class="ngram-output-card">
+                    <div class="output-card-header">
+                      <span class="out-title">Decoded Optimal Hidden State Sequence ($X^*$):</span>
+                      <span class="cand-state-badge" id="valHmmPathBadge">Status: Ready</span>
+                    </div>
+                    <div class="hmm-path-ribbon" id="hmmPathRibbon">
+                      <em>Click "Decode Optimal Viterbi Path" or "Step Trellis Forward" to begin...</em>
+                    </div>
+                  </div>
+
+                  <div class="ngram-candidates-card">
+                    <div class="candidates-header">
+                      <span class="cand-title">Posterior State Probabilities ($\gamma_t(s) = P(X_t \mid Y)$):</span>
+                      <span class="out-stats" id="valHmmPosteriorTime">Time: Step 1</span>
+                    </div>
+                    <div class="candidates-list" id="hmmPosteriorList">
+                      <div class="empty-candidates-hint">Run decoder to see state posterior probabilities.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           MODULE 09: CONTINUOUS-TIME MARKOV CHAINS (CTMC)
+           ========================================================= -->
+      <section class="module-card" id="module-9">
+        <div class="module-header">
+          <span class="module-chip">Module 09</span>
+          <h2 class="module-heading">Continuous-Time Markov Chains (CTMC)</h2>
+          <p class="module-sub">Generators $Q$, Kolmogorov Differential Equations, Exponential Holding Times & Queueing Models</p>
+        </div>
+
+        <div class="module-body">
+          <div class="module-intro">
+            <p class="paragraph">
+              While discrete-time chains observe states at fixed integer ticks $n \in \{0, 1, 2, \dots\}$, physical, biological, and telecommunication systems evolve continuously over time $t \in [0, \infty)$. A <strong>Continuous-Time Markov Chain (CTMC)</strong> $\{X(t) : t \ge 0\}$ models stochastic dynamics with <em>exponentially distributed sojourn times</em> and transitions governed by the <strong>Infinitesimal Generator Matrix $Q$</strong>.
+            </p>
+          </div>
+
+          <!-- Conceptual Architecture Grid -->
+          <div class="concepts-grid">
+            <!-- Concept 1: Continuous Markov Property & Semigroup -->
+            <div class="concept-card">
+              <div class="concept-icon">⏱️</div>
+              <h4 class="concept-title">Continuous Markov Property & Semigroup</h4>
+              <p class="concept-desc">
+                For all future times $t+s \ge s \ge 0$ and history $\mathcal{H}_s = \{X(u) : 0 \le u < s\}$:
+              </p>
+              <div class="katex-display">
+                $$P(X(t+s) = j \mid X(s) = i, \mathcal{H}_s) = P_{ij}(t)$$
+              </div>
+              <p class="concept-desc">
+                The transition matrices form a continuous <strong>stochastic semigroup</strong> satisfying Chapman-Kolmogorov: $P(t+s) = P(t)P(s)$ with $P(0) = I$.
+              </p>
+            </div>
+
+            <!-- Concept 2: Exponential Holding Times & Embedded Chain -->
+            <div class="concept-card">
+              <div class="concept-icon">⏳</div>
+              <h4 class="concept-title">Exponential Holding Times & Embedded Chain</h4>
+              <p class="concept-desc">
+                Due to memorylessness, the time $\tau_i$ spent in state $i$ before transitioning is strictly <strong>Exponentially Distributed</strong>:
+              </p>
+              <div class="katex-display">
+                $$\tau_i \sim \text{Exp}(q_i), \quad \mathbb{E}[\tau_i] = \frac{1}{q_i} = \frac{1}{\sum_{j \ne i} q_{ij}}$$
+              </div>
+              <p class="concept-desc">
+                When jumping, the chain enters state $j \ne i$ with probability $p_{ij} = q_{ij} / q_i$ (the <em>Embedded Jump Chain</em> $\Pi$).
+              </p>
+            </div>
+
+            <!-- Concept 3: Infinitesimal Generator Q -->
+            <div class="concept-card">
+              <div class="concept-icon">⚡</div>
+              <h4 class="concept-title">The Infinitesimal Generator Matrix $Q$</h4>
+              <p class="concept-desc">
+                Transition rates define the derivative of $P(t)$ at the origin $t = 0$:
+              </p>
+              <div class="katex-display">
+                $$q_{ij} = \lim_{h \to 0^+} \frac{P_{ij}(h)}{h} \quad (j \ne i), \quad q_{ii} = -\sum_{j \ne i} q_{ij}$$
+              </div>
+              <p class="concept-desc">
+                $Q$ satisfies $q_{ij} \ge 0$ (off-diagonals), $q_{ii} \le 0$ (diagonals), and <strong>zero row sums</strong>: $Q \mathbf{1} = \mathbf{0}$.
+              </p>
+            </div>
+
+            <!-- Concept 4: Stationary Distribution pi Q = 0 -->
+            <div class="concept-card">
+              <div class="concept-icon">⚖️</div>
+              <h4 class="concept-title">Stationary Distribution & Global Balance</h4>
+              <p class="concept-desc">
+                The stationary distribution $\pi$ satisfies the <strong>differential equilibrium</strong>:
+              </p>
+              <div class="katex-display">
+                $$\pi Q = \mathbf{0} \iff \sum_{i \ne j} \pi_i q_{ij} = \pi_j q_j, \quad \sum_{i \in \mathcal{S}} \pi_i = 1$$
+              </div>
+              <p class="concept-desc">
+                <em>Intuition: Rate of probability flowing INTO state $j$ equals the rate flowing OUT OF state $j$.</em>
+              </p>
+            </div>
+          </div>
+
+          <!-- Kolmogorov Differential Equations & Matrix Exponential -->
+          <div class="math-callout theorem-box">
+            <div class="box-title">Kolmogorov Differential Equations & Analytic Matrix Exponential Solution</div>
+            <p class="paragraph">
+              The time-dependent transition probability matrix $P(t) = [P_{ij}(t)]$ satisfies the fundamental dual system of ordinary differential equations (ODEs):
+            </p>
+            <div class="katex-display">
+              $$\begin{aligned}
+              \text{Kolmogorov Backward Equation:} \quad &\frac{d}{dt} P(t) = Q P(t) \\
+              \text{Kolmogorov Forward Equation (Master Eq):} \quad &\frac{d}{dt} P(t) = P(t) Q
+              \end{aligned}$$
+            </div>
+            <p class="paragraph">
+              Given the initial condition $P(0) = I$, the unique analytical solution is given by the <strong>Matrix Exponential</strong>:
+            </p>
+            <div class="katex-display">
+              $$P(t) = e^{t Q} = \sum_{k=0}^\infty \frac{(t Q)^k}{k!} = I + t Q + \frac{t^2}{2!} Q^2 + \frac{t^3}{3!} Q^3 + \dots$$
+            </div>
+            <p class="paragraph">
+              For any initial probability vector $p(0)$, the state probability distribution at time $t$ is $p(t) = p(0) e^{tQ}$. As $t \to \infty$, $p(t) \to \pi$.
+            </p>
+          </div>
+
+          <!-- Worked Examples Grid -->
+          <div class="module-examples-grid" style="margin-top: 24px;">
+            <!-- Example 9.1: 3-State Chemical Reaction Network -->
+            <div class="example-box">
+              <div class="example-badge">Worked Example 9.1 &bull; Chemical Kinetics & Rate Matrix</div>
+              <h4 class="example-title">3-State Cyclic Chemical Reaction Network ($A \rightleftharpoons B \rightleftharpoons C$)</h4>
+              <p class="paragraph">
+                Consider a molecular isomer switching between three conformations $\mathcal{S} = \{A, B, C\}$ with infinitesimal generator matrix:
+              </p>
+              <div class="katex-display">
+                $$Q = \begin{pmatrix} -3 & 2 & 1 \\ 1 & -4 & 3 \\ 2 & 2 & -4 \end{pmatrix}$$
+              </div>
+
+              <!-- SVG Transition Rate Diagram -->
+              <div class="diagram-container">
+                <span class="diagram-caption">Continuous-Time Transition Rate Graph ($q_{ij}$ in s⁻¹):</span>
+                <svg class="example-svg" viewBox="0 0 680 180" width="100%" height="180">
+                  <defs>
+                    <marker id="arr-ctmc-cyan" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#06b6d4"/>
+                    </marker>
+                    <marker id="arr-ctmc-amber" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#f59e0b"/>
+                    </marker>
+                    <marker id="arr-ctmc-purple" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#818cf8"/>
+                    </marker>
+                  </defs>
+
+                  <!-- Curved rate edges -->
+                  <!-- A -> B (rate 2) -->
+                  <path d="M 175,60 Q 340,30 505,60" stroke="#06b6d4" stroke-width="2.5" fill="none" marker-end="url(#arr-ctmc-cyan)"/>
+                  <rect x="325" y="24" width="32" height="16" rx="3" fill="#0f1422"/>
+                  <text x="341" y="36" fill="#06b6d4" font-size="10" font-family="'Fira Code', monospace" text-anchor="middle">q=2</text>
+
+                  <!-- B -> A (rate 1) -->
+                  <path d="M 505,80 Q 340,110 175,80" stroke="#818cf8" stroke-width="2" fill="none" marker-end="url(#arr-ctmc-purple)"/>
+                  <rect x="325" y="98" width="32" height="16" rx="3" fill="#0f1422"/>
+                  <text x="341" y="110" fill="#818cf8" font-size="10" font-family="'Fira Code', monospace" text-anchor="middle">q=1</text>
+
+                  <!-- B -> C (rate 3) -->
+                  <path d="M 525,85 L 350,145" stroke="#06b6d4" stroke-width="2.5" fill="none" marker-end="url(#arr-ctmc-cyan)"/>
+                  <rect x="445" y="115" width="32" height="16" rx="3" fill="#0f1422"/>
+                  <text x="461" y="127" fill="#06b6d4" font-size="10" font-family="'Fira Code', monospace" text-anchor="middle">q=3</text>
+
+                  <!-- C -> B (rate 2) -->
+                  <path d="M 345,155 L 515,95" stroke="#f59e0b" stroke-width="2" fill="none" marker-end="url(#arr-ctmc-amber)"/>
+                  <rect x="420" y="140" width="32" height="16" rx="3" fill="#0f1422"/>
+                  <text x="436" y="152" fill="#f59e0b" font-size="10" font-family="'Fira Code', monospace" text-anchor="middle">q=2</text>
+
+                  <!-- C -> A (rate 2) -->
+                  <path d="M 330,145 L 165,85" stroke="#f59e0b" stroke-width="2.5" fill="none" marker-end="url(#arr-ctmc-amber)"/>
+                  <rect x="235" y="115" width="32" height="16" rx="3" fill="#0f1422"/>
+                  <text x="251" y="127" fill="#f59e0b" font-size="10" font-family="'Fira Code', monospace" text-anchor="middle">q=2</text>
+
+                  <!-- A -> C (rate 1) -->
+                  <path d="M 155,95 L 325,155" stroke="#818cf8" stroke-width="2" fill="none" marker-end="url(#arr-ctmc-purple)"/>
+                  <rect x="220" y="140" width="32" height="16" rx="3" fill="#0f1422"/>
+                  <text x="236" y="152" fill="#818cf8" font-size="10" font-family="'Fira Code', monospace" text-anchor="middle">q=1</text>
+
+                  <!-- Nodes -->
+                  <!-- Node A -->
+                  <circle cx="150" cy="70" r="24" fill="#182238" stroke="#06b6d4" stroke-width="3"/>
+                  <text x="150" y="74" fill="#fff" font-size="13" font-weight="700" text-anchor="middle" font-family="'Outfit', sans-serif">State A</text>
+                  <text x="150" y="38" fill="#94a3b8" font-size="9.5" font-family="'Fira Code', monospace" text-anchor="middle">qA=3 (E[τ]=0.33s)</text>
+
+                  <!-- Node B -->
+                  <circle cx="530" cy="70" r="24" fill="#182238" stroke="#818cf8" stroke-width="3"/>
+                  <text x="530" y="74" fill="#fff" font-size="13" font-weight="700" text-anchor="middle" font-family="'Outfit', sans-serif">State B</text>
+                  <text x="530" y="38" fill="#94a3b8" font-size="9.5" font-family="'Fira Code', monospace" text-anchor="middle">qB=4 (E[τ]=0.25s)</text>
+
+                  <!-- Node C -->
+                  <circle cx="340" cy="150" r="24" fill="#182238" stroke="#f59e0b" stroke-width="3"/>
+                  <text x="340" y="154" fill="#fff" font-size="13" font-weight="700" text-anchor="middle" font-family="'Outfit', sans-serif">State C</text>
+                  <text x="340" y="188" fill="#94a3b8" font-size="9.5" font-family="'Fira Code', monospace" text-anchor="middle">qC=4 (E[τ]=0.25s)</text>
+                </svg>
+              </div>
+
+              <div class="example-solution">
+                <span class="solution-label">Step-by-Step Analysis:</span>
+                <ul class="prop-list">
+                  <li><strong>Holding Times (Exponential Sojourns):</strong>
+                    $q_A = -q_{11} = 3 \implies \mathbb{E}[\tau_A] = \frac{1}{3}\text{s}$, 
+                    $q_B = -q_{22} = 4 \implies \mathbb{E}[\tau_B] = \frac{1}{4}\text{s}$, 
+                    $q_C = -q_{33} = 4 \implies \mathbb{E}[\tau_C] = \frac{1}{4}\text{s}$.
+                  </li>
+                  <li><strong>Embedded Jump Matrix $\Pi$:</strong>
+                    $$\Pi = \begin{pmatrix} 0 & q_{AB}/q_A & q_{AC}/q_A \\ q_{BA}/q_B & 0 & q_{BC}/q_B \\ q_{CA}/q_C & q_{CB}/q_C & 0 \end{pmatrix} = \begin{pmatrix} 0 & 2/3 & 1/3 \\ 1/4 & 0 & 3/4 \\ 1/2 & 1/2 & 0 \end{pmatrix}$$
+                  </li>
+                  <li><strong>Stationary Distribution ($\pi Q = \mathbf{0}, \sum \pi_i = 1$):</strong>
+                    $$\begin{cases}
+                    -3\pi_A + \pi_B + 2\pi_C = 0 \\
+                    2\pi_A - 4\pi_B + 2\pi_C = 0 \\
+                    \pi_A + \pi_B + \pi_C = 1
+                    \end{cases} \implies \pi = \begin{bmatrix} \frac{1}{3} & \frac{3}{10} & \frac{11}{30} \end{bmatrix} \approx \begin{bmatrix} 33.33\% & 30.00\% & 36.67\% \end{bmatrix}$$
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Example 9.2: M/M/1 Queueing Model -->
+            <div class="example-box">
+              <div class="example-badge">Worked Example 9.2 &bull; Birth-Death & Queueing Theory</div>
+              <h4 class="example-title">The $M/M/1/K$ Finite Buffer Queue ($K=3, \lambda=2.0, \mu=3.0$)</h4>
+              <p class="paragraph">
+                Customers arrive according to a Poisson process with rate $\lambda = 2.0\text{/s}$ and are served with rate $\mu = 3.0\text{/s}$. The buffer capacity is $K = 3$ (max 3 packets in system).
+              </p>
+
+              <div class="example-solution">
+                <span class="solution-label">Generator Matrix & Packet Loss Analysis:</span>
+                <ul class="prop-list">
+                  <li><strong>Tridiagonal Rate Matrix $Q \in \mathbb{R}^{4 \times 4}$:</strong>
+                    $$Q = \begin{pmatrix} -\lambda & \lambda & 0 & 0 \\ \mu & -(\lambda+\mu) & \lambda & 0 \\ 0 & \mu & -(\lambda+\mu) & \lambda \\ 0 & 0 & \mu & -\mu \end{pmatrix} = \begin{pmatrix} -2 & 2 & 0 & 0 \\ 3 & -5 & 2 & 0 \\ 0 & 3 & -5 & 2 \\ 0 & 0 & 3 & -3 \end{pmatrix}$$
+                  </li>
+                  <li><strong>Traffic Intensity ($\rho$):</strong> $\rho = \frac{\lambda}{\mu} = \frac{2}{3} \approx 0.667$.</li>
+                  <li><strong>Equilibrium Distribution $\pi_n = \pi_0 \rho^n$:</strong>
+                    $$\pi_0 = \frac{1 - \rho}{1 - \rho^{K+1}} = \frac{1 - 2/3}{1 - (2/3)^4} = \frac{1/3}{65/81} = \frac{27}{65} \approx 41.54\%$$
+                    $$\pi = \begin{bmatrix} \pi_0 & \pi_1 & \pi_2 & \pi_3 \end{bmatrix} = \begin{bmatrix} \frac{27}{65} & \frac{18}{65} & \frac{12}{65} & \frac{8}{65} \end{bmatrix} \approx \begin{bmatrix} 41.54\% & 27.69\% & 18.46\% & 12.31\% \end{bmatrix}$$
+                  </li>
+                  <li><strong>Packet Loss (Blocking Probability):</strong> $P_{\text{loss}} = \pi_3 \approx 12.31\%$ (incoming packets arriving when buffer is full are dropped).</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Simulation 09: Live Continuous-Time Stochastic Engine -->
+          <div class="interactive-container" id="simCtmcSection" style="margin-top: 28px;">
+            <div class="interactive-header">
+              <div class="sim-badge">Interactive Simulation 09</div>
+              <h4 class="sim-title">Live Continuous-Time Engine: Gillespie SSA & Kolmogorov $P(t) = e^{tQ}$ Integrator</h4>
+              <p class="sim-desc">
+                Simulate exact continuous-time sample paths with the Gillespie algorithm, or integrate Kolmogorov's differential Master Equation $p(t) = p(0)e^{tQ}$ to watch probabilities evolve smoothly toward equilibrium $\pi$.
+              </p>
+            </div>
+
+            <!-- Model Presets & Mode Selector -->
+            <div class="ctmc-controls-top">
+              <div class="trainer-header-row">
+                <label class="trainer-label">CTMC Scenario:</label>
+                <div class="preset-pills-row">
+                  <button class="btn-preset active" data-ctmc="chemical">⚗️ 3-State Chemical Network ($A \rightleftharpoons B \rightleftharpoons C$)</button>
+                  <button class="btn-preset" data-ctmc="queue">📦 M/M/1/3 Queue (Buffer K=3)</button>
+                  <button class="btn-preset" data-ctmc="telegraph">⚡ 2-State Telegraph Noise (Open/Closed)</button>
+                </div>
+              </div>
+
+              <div class="ctmc-mode-bar">
+                <div class="mode-toggle-group">
+                  <span class="m-label">Simulation Mode:</span>
+                  <button class="btn-mode active" id="ctmcModeOde">📈 Continuous $P(t) = e^{tQ}$ ODE Curves</button>
+                  <button class="btn-mode" id="ctmcModeGillespie">🎲 Gillespie SSA Sample Path</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Rate Controls & Sliders -->
+            <div class="ctmc-rates-bar" id="ctmcRatesContainer">
+              <!-- Dynamically generated rate parameter sliders -->
+            </div>
+
+            <!-- Execution Action Bar -->
+            <div class="ngram-controls-bar">
+              <div class="graphwalk-btn-group">
+                <button class="btn-sim primary" id="ctmcRunBtn">
+                  <svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                  <span>Animate Time Flow</span>
+                </button>
+                <button class="btn-sim secondary" id="ctmcStepGillespieBtn">
+                  <svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-7.85-1.42 1.42 5.43 5.43H5v2z"/></svg>
+                  <span>Step 1 Event (Gillespie)</span>
+                </button>
+                <button class="btn-sim outline" id="ctmcResetBtn">Reset t = 0</button>
+              </div>
+
+              <div class="speed-slider-row">
+                <label for="ctmcTimeSlider">Time Horizon $t$:</label>
+                <input type="range" id="ctmcTimeSlider" min="0.0" max="5.0" step="0.05" value="1.5">
+                <span id="ctmcTimeVal">1.50s</span>
+              </div>
+            </div>
+
+            <!-- Main Interactive Display: Canvas + Real-Time Generator Matrix & Stationary Measure -->
+            <div class="graphwalk-main-grid">
+              <!-- Left: Continuous Trajectory / Gillespie Canvas -->
+              <div class="canvas-graphwalk-wrapper">
+                <canvas id="ctmcCanvas" width="520" height="320"></canvas>
+                <div class="canvas-drag-hint" id="ctmcCanvasHint">Continuous Kolmogorov Probability Curves $p(t)$</div>
+                <div class="graph-walker-overlay">
+                  <span>Current Time: <strong id="valCtmcCurrentTime" style="color: var(--accent-cyan);">t = 1.50s</strong></span>
+                  <span>Active State / Mode: <strong id="valCtmcModeStatus" style="color: var(--accent-amber);">Continuous ODE</strong></span>
+                </div>
+              </div>
+
+              <!-- Right: Infinitesimal Generator Q & Stationary Distribution Table -->
+              <div class="graphwalk-distribution-card">
+                <h5 class="dist-card-title">Infinitesimal Generator $Q$ & Equilibrium Measure $\pi$</h5>
+                
+                <div class="dist-table-wrapper">
+                  <table class="matrix-table-analytical dist-comp-table">
+                    <thead>
+                      <tr>
+                        <th>State</th>
+                        <th>Holding Rate $q_i$</th>
+                        <th>Avg Sojourn $\mathbb{E}[\tau_i]$</th>
+                        <th>Live $p_i(t)$</th>
+                        <th>Stationary $\pi_i$</th>
+                      </tr>
+                    </thead>
+                    <tbody id="ctmcTableBody">
+                      <!-- Dynamically rendered rows -->
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="dist-metrics-summary">
+                  <div class="metric-pill">
+                    <span class="m-label">Generator Matrix Condition ($Q \mathbf{1} = \mathbf{0}$):</span>
+                    <strong class="m-val highlight" style="color: var(--accent-green);">Zero Row Sums Verified ✓</strong>
+                  </div>
+                  <div class="metric-pill">
+                    <span class="m-label">Equilibrium Residual $\|\pi Q\|_\infty$:</span>
+                    <strong class="m-val highlight" id="valCtmcResidual">0.0000</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           MODULE 10: EXPLOSIVE CTMC, FELLER & REUTER THEORY
+           ========================================================= -->
+      <section class="module-card" id="module-10">
+        <div class="module-header">
+          <span class="module-chip">Module 10 &bull; Advanced Continuous Time</span>
+          <h2 class="module-heading">Explosive CTMC, Feller Condition & Reuter's Theorem</h2>
+          <p class="module-sub">Explore the critical boundary between Honest and Dishonest Markov chains, infinite jump singularities, Kolmogorov defects, and harmonic resolvent systems.</p>
+        </div>
+
+        <div class="module-body">
+          <!-- Motivation & Real-Life Case Studies Banner -->
+          <div class="motivation-container" style="background: linear-gradient(135deg, rgba(244, 63, 94, 0.08), rgba(168, 85, 247, 0.08)); border: 1px solid rgba(244, 63, 94, 0.25); border-radius: var(--radius-lg); padding: 22px; margin-bottom: 28px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 24px;">💡</span>
+                <h3 style="font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 700; color: #ffffff; margin: 0;">
+                  Real-World Motivation: Why Study Explosive Processes?
+                </h3>
+              </div>
+              <span class="badge-rose" style="font-size: 11px; padding: 4px 10px; border-radius: 9999px; font-weight: 600; text-transform: uppercase;">Physical Blow-Up Phenomena</span>
+            </div>
+            
+            <p style="font-size: 14px; color: #cbd5e1; line-height: 1.6; margin-bottom: 18px;">
+              In standard probability, stochastic models are often assumed to run smoothly forever ($\zeta = \infty$). However, in many critical physical, industrial, and biological systems, <strong>positive feedback mechanisms</strong> cause each event to accelerate the rate of subsequent events. When the transition rates grow super-linearly ($\sum \lambda_n^{-1} < \infty$), an infinite cascade of transitions occurs within a <strong>finite, measurable time window</strong> ($\zeta < \infty$). Modeling this explosion is essential for disaster prevention, containment, and materials synthesis.
+            </p>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+              <!-- Example 1: Thermal Runaway & Battery Flashover -->
+              <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); border-left: 3px solid #f43f5e; border-radius: var(--radius-md); padding: 16px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                  <span style="font-size: 18px;">🔋</span>
+                  <h4 style="font-size: 14.5px; font-weight: 700; color: #ffffff; margin: 0;">1. Thermal Runaway & Battery Flashover</h4>
+                </div>
+                <p style="font-size: 13px; color: #94a3b8; line-height: 1.5; margin-bottom: 10px;">
+                  In Lithium-ion battery packs and exothermic chemical reactors (Arrhenius kinetics), heat generation accelerates with temperature. As internal energy states $n$ rise, reaction rates scale super-linearly ($\lambda_n \propto c n^2$).
+                </p>
+                <div style="background: rgba(0,0,0,0.35); padding: 8px 10px; border-radius: 6px; font-size: 12px; font-family: 'Fira Code', monospace; color: #fb7185;">
+                  Holding time τ_n ≈ 1/(c n²) ⟹ ∑ τ_n = π²/(6c) < ∞
+                </div>
+                <p style="font-size: 12px; color: #cbd5e1; margin-top: 8px;">
+                  <strong>Why We Study It:</strong> Predicts the exact critical safety window $\mathbb{E}[\zeta]$ before thermal flashover to design automated cooling tripwires.
+                </p>
+              </div>
+
+              <!-- Example 2: Cascading Power Grid Blackouts -->
+              <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); border-left: 3px solid #f59e0b; border-radius: var(--radius-md); padding: 16px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                  <span style="font-size: 18px;">⚡</span>
+                  <h4 style="font-size: 14.5px; font-weight: 700; color: #ffffff; margin: 0;">2. Cascading Power Grid Blackouts</h4>
+                </div>
+                <p style="font-size: 13px; color: #94a3b8; line-height: 1.5; margin-bottom: 10px;">
+                  When a transmission line trips in a high-voltage electrical grid, its load is redistributed to remaining lines. As $n$ components fail, remaining lines become critically overloaded, causing failure rates to explode: $\lambda_n \propto (N - n)^{-\alpha}$.
+                </p>
+                <div style="background: rgba(0,0,0,0.35); padding: 8px 10px; border-radius: 6px; font-size: 12px; font-family: 'Fira Code', monospace; color: #fbbf24;">
+                  Successive line trips accelerate from hours to milliseconds
+                </div>
+                <p style="font-size: 12px; color: #cbd5e1; margin-top: 8px;">
+                  <strong>Why We Study It:</strong> Determines optimal islanding thresholds (controlled grid partition) before the explosive cascade regime is entered.
+                </p>
+              </div>
+
+              <!-- Example 3: Polymer Gelation & Blood Clotting -->
+              <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); border-left: 3px solid #a855f7; border-radius: var(--radius-md); padding: 16px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                  <span style="font-size: 18px;">🧬</span>
+                  <h4 style="font-size: 14.5px; font-weight: 700; color: #ffffff; margin: 0;">3. Kinetic Polymer Gelation & Blood Clotting</h4>
+                </div>
+                <p style="font-size: 13px; color: #94a3b8; line-height: 1.5; margin-bottom: 10px;">
+                  During polymerization (Flory-Stockmayer gelation) or blood coagulation (fibrin crosslinking), cluster fusion rates scale with cluster product sizes $K(j, k) \propto (j \cdot k)^\gamma$. Larger clusters react exponentially faster.
+                </p>
+                <div style="background: rgba(0,0,0,0.35); padding: 8px 10px; border-radius: 6px; font-size: 12px; font-family: 'Fira Code', monospace; color: #c084fc;">
+                  At finite gelation time t_gel = ζ, infinite gel forms
+                </div>
+                <p style="font-size: 12px; color: #cbd5e1; margin-top: 8px;">
+                  <strong>Why We Study It:</strong> Controls curing timing in advanced resin engineering and prevents thrombosis (spontaneous vascular blockages) in clinical medicine.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Concept Grid: Theory Pillars -->
+          <div class="concept-grid">
+            <!-- 10.1 Explosion Epoch & Honest vs Dishonest -->
+            <div class="concept-card">
+              <div class="concept-header">
+                <span class="concept-badge">Definition 10.1</span>
+                <h3 class="concept-title">Explosion Epoch $\zeta$ & Regularity</h3>
+              </div>
+              <p class="concept-text">
+                For a continuous-time Markov chain with jump times $J_0 = 0 < J_1 < J_2 < \dots$ and exponential holding times $\tau_n = J_n - J_{n-1} \sim \text{Exp}(q_{X(J_{n-1})})$, the <strong>explosion epoch (lifetime)</strong> $\zeta$ is:
+              </p>
+              <div class="formula-box">
+                $$\zeta = \lim_{n \to \infty} J_n = \sum_{n=1}^\infty \tau_n \in (0, \infty]$$
+              </div>
+              <ul class="prop-list">
+                <li><strong>Honest (Non-Explosive / Regular):</strong> $P_i(\zeta = \infty) = 1$ for all initial states $i \in \mathcal{S}$. Only finitely many jumps occur in any finite time interval $[0, t]$ almost surely.</li>
+                <li><strong>Dishonest (Explosive / Non-Regular):</strong> $P_i(\zeta < \infty) > 0$ for some $i$. Infinitely many transitions occur in finite time, causing the state to 'escape to infinity' $\Delta$ at time $\zeta$.</li>
+              </ul>
+            </div>
+
+            <!-- 10.2 Feller's Pure Birth Criterion -->
+            <div class="concept-card">
+              <div class="concept-header">
+                <span class="concept-badge">Theorem 10.2 &bull; Feller</span>
+                <h3 class="concept-title">Feller's Pure Birth Explosion Criterion</h3>
+              </div>
+              <p class="concept-text">
+                Let $\{X(t), t \ge 0\}$ be a pure birth process with strictly positive birth rates $\lambda_n > 0$ for all $n \ge 0$. The process is <strong>explosive</strong> ($P_0(\zeta < \infty) = 1$) <strong>if and only if</strong> the sum of reciprocal birth rates converges:
+              </p>
+              <div class="formula-box">
+                $$\sum_{n=0}^\infty \frac{1}{\lambda_n} < \infty \iff \mathbb{E}_0[\zeta] = \sum_{n=0}^\infty \frac{1}{\lambda_n} < \infty$$
+              </div>
+              <p class="concept-text" style="font-size:13.5px; color:#cbd5e1;">
+                For power-law rates $\lambda_n = c(n+1)^p$:
+                <br>&bull; $p \le 1$ (Linear / Yule process $\lambda_n = c(n+1)$): $\sum \frac{1}{n+1} = \infty \implies$ <strong>Honest ($\zeta = \infty$ a.s.)</strong>
+                <br>&bull; $p > 1$ (Super-linear combustion $\lambda_n = c(n+1)^2$): $\sum \frac{1}{(n+1)^2} = \frac{\pi^2}{6c} < \infty \implies$ <strong>Explodes in finite time with mean $\mathbb{E}[\zeta] = \frac{\pi^2}{6c}$</strong>.
+              </p>
+            </div>
+
+            <!-- 10.3 Reuter's Explosion Criterion -->
+            <div class="concept-card">
+              <div class="concept-header">
+                <span class="concept-badge">Theorem 10.3 &bull; Reuter</span>
+                <h3 class="concept-title">Reuter's Harmonic System Criterion</h3>
+              </div>
+              <p class="concept-text">
+                For a general conservative $Q$-matrix on a countable state space $\mathcal{S}$, the minimal transition function $P(t)$ is <strong>non-explosive (honest)</strong> <strong>if and only if</strong> for some (or all) $\lambda > 0$, the only bounded solution $(u_i)_{i \in \mathcal{S}}$ to:
+              </p>
+              <div class="formula-box">
+                $$(\lambda I - Q) u = 0 \iff \lambda u_i = \sum_{j \in \mathcal{S}} q_{ij} u_j, \quad 0 \le u_i \le 1 \; \forall i$$
+              </div>
+              <p class="concept-text" style="font-size:13.5px; color:#cbd5e1;">
+                is the trivial solution $u = \mathbf{0}$. If a non-zero bounded solution exists, the chain is explosive, and the maximal bounded solution yields the Laplace transform of the explosion epoch: $u_i = \mathbb{E}_i[e^{-\lambda \zeta}]$.
+              </p>
+            </div>
+
+            <!-- 10.4 Kolmogorov Defect & Boundedness -->
+            <div class="concept-card">
+              <div class="concept-header">
+                <span class="concept-badge">Theorem 10.4 &bull; Defect</span>
+                <h3 class="concept-title">Kolmogorov Defect & Uniform Boundedness</h3>
+              </div>
+              <p class="concept-text">
+                The minimal transition function $P(t) = [p_{ij}(t)]$ constructed via successive jumps always satisfies the backward equation $P'(t) = Q P(t)$. In explosive chains, total probability mass escapes to the cemetery state $\Delta$:
+              </p>
+              <div class="formula-box">
+                $$\sum_{j \in \mathcal{S}} p_{ij}(t) = P_i(\zeta > t) = 1 - P_i(\zeta \le t) < 1 \quad (\text{Defect } = P_i(\zeta \le t))$$
+              </div>
+              <ul class="prop-list">
+                <li><strong>Uniform Boundedness Lemma:</strong> If $\sup_{i \in \mathcal{S}} q_i = C < \infty$, the process is stochastically dominated by a Poisson process with rate $C \implies$ <strong>strictly non-explosive</strong>.</li>
+                <li><strong>Finite State Spaces:</strong> Every finite-state CTMC ($|\mathcal{S}| < \infty$) is guaranteed to be non-explosive.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Worked Examples -->
+          <div class="worked-examples-section">
+            <!-- Example 10.1: Quadratic Birth vs Linear Yule -->
+            <div class="example-box">
+              <div class="example-badge">Worked Example 10.1 &bull; Feller Summation</div>
+              <h4 class="example-title">Analytical Explosion of Quadratic Pure Birth ($\lambda_n = c(n+1)^2$)</h4>
+              <p class="paragraph">
+                Let $\{X(t)\}$ be a pure birth process starting at $X(0) = 0$ with birth rates $\lambda_n = c(n+1)^2$. Prove that explosion occurs almost surely in finite time and compute the exact mean and variance of $\zeta$.
+              </p>
+
+              <div class="example-solution">
+                <span class="solution-label">Complete Derivation:</span>
+                <ul class="prop-list">
+                  <li><strong>Expected Explosion Time:</strong>
+                    $$\mathbb{E}_0[\zeta] = \sum_{n=0}^\infty \mathbb{E}[\tau_n] = \sum_{n=0}^\infty \frac{1}{\lambda_n} = \frac{1}{c} \sum_{k=1}^\infty \frac{1}{k^2} = \frac{\pi^2}{6c} < \infty$$
+                  </li>
+                  <li><strong>Variance Analysis (Kolmogorov's Two-Series):</strong>
+                    $$\text{Var}_0(\zeta) = \sum_{n=0}^\infty \frac{1}{\lambda_n^2} = \frac{1}{c^2} \sum_{k=1}^\infty \frac{1}{k^4} = \frac{\pi^4}{90 c^2} < \infty$$
+                  </li>
+                  <li><strong>Conclusion:</strong> Because the series converges with finite mean and variance, $P_0(\zeta < \infty) = 1$. The process explodes in finite time with mean blow-up epoch $\mathbb{E}_0[\zeta] = \frac{\pi^2}{6c} \approx \frac{1.6449}{c}\text{s}$.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Example 10.2: Reuter Recurrence -->
+            <div class="example-box">
+              <div class="example-badge">Worked Example 10.2 &bull; Resolvent Analysis</div>
+              <h4 class="example-title">Reuter's Harmonic Recurrence Solution</h4>
+              <p class="paragraph">
+                Set up Reuter's linear system $(\lambda I - Q) u = 0$ for a pure birth chain and demonstrate that bounded solutions exist if and only if $\sum \lambda_n^{-1} < \infty$.
+              </p>
+
+              <div class="example-solution">
+                <span class="solution-label">Step-by-Step Resolution:</span>
+                <ul class="prop-list">
+                  <li><strong>Component System:</strong> $\lambda u_n = -\lambda_n u_n + \lambda_n u_{n+1} \implies u_{n+1} = \left(1 + \frac{\lambda}{\lambda_n}\right) u_n = u_0 \prod_{k=0}^n \left(1 + \frac{\lambda}{\lambda_k}\right)$.</li>
+                  <li><strong>Infinite Product Convergence:</strong>
+                    $$\lim_{n \to \infty} u_n = u_0 \prod_{k=0}^\infty \left(1 + \frac{\lambda}{\lambda_k}\right) < \infty \iff \sum_{k=0}^\infty \frac{1}{\lambda_k} < \infty$$
+                  </li>
+                  <li><strong>Probabilistic Interpretation:</strong> Choosing $u_0 = \prod_{k=0}^\infty (1 + \lambda/\lambda_k)^{-1} \in (0, 1)$ yields $u_n = \mathbb{E}_n[e^{-\lambda \zeta}]$, directly recovering the Laplace transform of the explosion time.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           MODULE 11: INTERACTIVE KNOWLEDGE CHECK / QUIZ
+           ========================================================= -->
+      <section class="module-card" id="module-quiz">
+        <div class="module-header">
+          <span class="module-chip">Knowledge Check</span>
+          <h2 class="module-heading">Interactive Mastery Assessment</h2>
+          <p class="module-sub">Test your theoretical and computational intuition on Markov Chains</p>
+        </div>
+
+        <div class="module-body">
+          <div class="quiz-container" id="quizContainer">
+            <!-- Dynamically populated quiz questions -->
+          </div>
+          <div class="quiz-footer">
+            <div class="quiz-btn-group">
+              <button class="btn-sim primary" id="submitQuizBtn">Check Answers</button>
+              <button class="btn-sim outline" id="resetQuizBtn">
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" style="width: 14px; height: 14px; vertical-align: -2px; margin-right: 4px;"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.77 20 14.45 20 13c0-4.42-3.58-8-8-8zm-6 8c0-1.01.25-1.97.7-2.8L5.24 8.74C4.46 10.23 4 11.55 4 13c0 4.42 3.58 8 8 8v4l5-5-5-5v4c-3.31 0-6-2.69-6-6z"/></svg>
+                <span>Clear Score & Reset</span>
+              </button>
+            </div>
+            <span class="quiz-score" id="quizScoreText">Score: - / 20</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="app-footer">
+        <p>Interactive Markov Chains Courseware &bull; Designed for Stochastic Processes, Mathematics, and Data Science Courses.</p>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- Dedicated Presenter Slide Stage Container -->
+  <div id="presenter-stage" class="presenter-stage">
+    <div class="presenter-slide-card" id="presenter-slide-content">
+      <!-- Populated dynamically per slide -->
+    </div>
+  </div>
+
+  <!-- Presenter Table of Contents / Slide Index Modal -->
+  <div id="presenter-toc-modal" class="presenter-toc-modal">
+    <div class="presenter-toc-backdrop" id="presenter-toc-backdrop"></div>
+    <div class="presenter-toc-dialog">
+      <div class="presenter-toc-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:18px;">📑</span>
+          <h3 style="font-size:16px; font-weight:700; color:#ffffff; margin:0;">MarkovLab Slide Deck Index</h3>
+          <span id="presenter-toc-total-badge" class="badge-purple card-badge">35 Slides</span>
+        </div>
+        <button id="presenter-toc-close" class="btn-action secondary" style="padding:4px 10px; font-size:12px; cursor:pointer;">✕ Close (Esc)</button>
+      </div>
+      <div class="presenter-toc-grid" id="presenter-toc-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Presenter Controller Bar (Active in Presenter Mode) -->
+  <div id="presenter-toolbar" class="presenter-toolbar">
+    <div class="presenter-left">
+      <button id="presenter-btn-toc" class="presenter-btn" title="Open Slide Deck Index (Shortcut: O)">
+        📑 Index
+      </button>
+      <span id="presenter-slide-indicator" class="presenter-slide-pill" style="cursor:pointer;" title="Click to open Slide Index (O)">Slide 1 / 35</span>
+      <span id="presenter-slide-title" class="presenter-title-pill">📖 Module 1: Foundations</span>
+    </div>
+
+    <div class="presenter-controls">
+      <button id="presenter-btn-prev" class="presenter-btn" title="Previous Slide (← / PageUp / ArrowLeft)">
+        ❮ Prev
+      </button>
+      <button id="presenter-btn-next" class="presenter-btn primary" title="Next Slide (→ / Space / PageDown)">
+        Next ❯
+      </button>
+      <button id="presenter-btn-laser" class="presenter-btn" title="Toggle Laser Pointer Spotlight (Shortcut: L)">
+        🔴 Laser
+      </button>
+      <button id="presenter-btn-fullscreen" class="presenter-btn" title="Toggle True Fullscreen (F11)">
+        ⛶ Fullscreen
+      </button>
+      <button id="presenter-btn-exit" class="presenter-btn danger" title="Exit Presenter Mode (Esc or P)">
+        ✕ Exit
+      </button>
+    </div>
+  </div>
+
+  <!-- Laser Pointer Canvas Overlay -->
+  <canvas id="laser-pointer-canvas"></canvas>
+
+  <!-- Scripts -->
+  <script src="markov-core.js"></script>
+  <script src="simulator-graph.js"></script>
+  <script src="simulators-advanced.js"></script>
+  <script src="presenter-mode.js"></script>
+  <script>
+    // Global Math Renderer that works reliably across all environments & dynamic elements
+    window.renderAllMath = function(target = document.body) {
+      if (window.renderMathInElement && target) {
+        try {
+          window.renderMathInElement(target, {
+            delimiters: [
+              { left: '$$', right: '$$', display: true },
+              { left: '$', right: '$', display: false },
+              { left: '\\[', right: '\\]', display: true },
+              { left: '\\(', right: '\\)', display: false }
+            ],
+            ignoredClasses: ['katex', 'katex-html', 'katex-mathml', 'ignore-math'],
+            throwOnError: false
+          });
+        } catch (e) {
+          console.warn("KaTeX render notice:", e);
+        }
+      }
+    };
+
+    // Attempt rendering on DOMContentLoaded
+    document.addEventListener("DOMContentLoaded", () => window.renderAllMath());
+    // Also attempt on full window load
+    window.addEventListener("load", () => window.renderAllMath());
+    // Polling retry in case of slight script load latency
+    let katexAttempts = 0;
+    const katexInterval = setInterval(() => {
+      katexAttempts++;
+      if (window.renderMathInElement) {
+        window.renderAllMath();
+        clearInterval(katexInterval);
+      } else if (katexAttempts > 25) {
+        clearInterval(katexInterval);
+      }
+    }, 150);
+  </script>
+</body>
+</html>
